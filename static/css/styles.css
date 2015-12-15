@@ -18,10 +18,30 @@
     height: 360px !important;
     overflow: scroll;
 }
+.mytable table tr td{
+    line-height: 10px;
+    border-color: #B58863;
+}
+
+.mytable table tr td p {
+    float: left;
+}
+.mytable table tr td:first-child {
+    max-width: 10px;
+    background-color: #F0D9B5;
+    text-align: left;
+}
+.mytable table td p.dim{
+    font-size: x-small;
+    float: right;
+    color: grey;
+}
 .buttons {
     text-align: center;
     margin: 10px;
 }
 button {
     margin-left: -6px;
+    background-color: #F0D9B5;
+    border-color:  #B58863;
 }

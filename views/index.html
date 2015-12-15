@@ -34,7 +34,6 @@
 <script type="text/javascript" src="/static/js/json3.min.js" ></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
 <script type="text/javascript" src="/static/js/highcharts.js"></script>
-<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script> -->
 <script>
 var board = ChessBoard('board', {
   pieceTheme	: '/static/img/chesspieces/{piece}.png'
@@ -46,7 +45,23 @@ var i = -1;
 var fens = [<% for(var i in moves) { %> '<%= moves[i].fen %>' ,<% } %>];
 
 $(document).ready(function() {
-	$("#moves").append(<% for(var i in moves) { %> <% if(i%2 == 0) { %>'<tr><td><%= i/2 %></td><td id="<%= i %>"><%= moves[i].position %> <%= moves[i].depths[19].scoreCp %></td>' +  <% } else { %>'<td id="<%= i %>"><%= moves[i].position %> <%= moves[i].depths[19].scoreCp %></td></tr>' + <% }} %> "");
+	$("#moves").append(
+		<% for(var i in moves) { %>
+			<% if(i%2 == 0) { %>
+				<% if (moves[i].depths[19].scoreCp * -1 > 0) { %>
+					'<tr><td><%= i/2 %></td><td id="<%= i %>"><%= moves[i].position %><p class="dim">+' + <%= moves[i].depths[19].scoreCp %> * -1 + '</p></td>' +
+				<% } else if (moves[i].depths[19].scoreCp * -1 <= 0) { %>
+					'<tr><td><%= i/2 %></td><td id="<%= i %>"><%= moves[i].position %><p class="dim">' + <%= moves[i].depths[19].scoreCp %> * -1 + '</p></td>' +
+				<% } %>
+			<% } else { %>
+				<% if ( moves[i].depths[19].scoreCp > 0) { %>
+					'<td id="<%= i %>"><%= moves[i].position %><p class="dim">+' + <%= moves[i].depths[19].scoreCp %> + '</p></td></tr>' +
+				<% } else if (moves[i].depths[19].scoreCp <= 0) { %>
+					'<td id="<%= i %>"><%= moves[i].position %><p class="dim">' + <%= moves[i].depths[19].scoreCp %> + '</p></td></tr>' +
+				<% } %>
+			<% } %>
+		<% } %>
+	"");
 	$('#area').highcharts({
 	   	chart: {
 	       type: 'area',
@@ -59,7 +74,7 @@ $(document).ready(function() {
 		xAxis: {
 			categories: [<% for(var i in moves) { %> '<%= moves[i].position %>' ,<% } %>],
 			plotBands: [{
-				color: '#D4C1B1', // Color value
+				color: '#F0D9B5', // Color value
 				from: -0.5, // Start of the plot band
 				to: <%= game.opening.length %> - 0.5, // End of the plot band
 				label: {
@@ -82,13 +97,17 @@ $(document).ready(function() {
 		series: [{
 			name: 'Scores',
 			data: [<% for(var i in moves) { %> <%= moves[i].depths[19].scoreCp %> ,<% } %>],
-			color: '#A6B2B0',
-			negativeColor: '#000000',
+			color: '#F4E4CB',
+			negativeColor: '#B58863',
 			point: {
 	            events: {
 	                click: function (e) {
+						$("td#" + i).css("background-color","");
 						i = e.point.index;
+						$("td#" + i).css("background-color","#C39F82");
 						board.position(fens[i]);
+						$(".mytable").scrollTop($('td#0').offset().top);
+						$(".mytable").scrollTop($('td#' + i).offset().top - 100);
 	                }
 	            }
 	        },
@@ -98,7 +117,7 @@ $(document).ready(function() {
 				states: {
 					select: {
 					   radius: 3,
-					   fillColor: 'yellow'
+					   fillColor: '#B58863'
 					}
 				}
 			}
@@ -113,14 +132,13 @@ $(document).ready(function() {
 			$(".mytable").scrollTop($('td#0').offset().top);
 			i = -1;
 		}
-		// $(".mytable").scrollTop($('td#' + i).offset().top);
 	});
 
 	$('#forward').on('click', function(){
 		if (i < fens.length - 1){
 			$("td#" + i).css("background-color","");
 			i++;
-			$("td#" + i).css("background-color","yellow");
+			$("td#" + i).css("background-color","#C39F82");
 			board.position(fens[i]);
 			chart.series[0].points[i].select();
 			$(".mytable").scrollTop($('td#0').offset().top);
@@ -132,7 +150,7 @@ $(document).ready(function() {
 		if (i > 0){
 			$("td#" + i).css("background-color","");
 			i--;
-			$("td#" + i).css("background-color","yellow");
+			$("td#" + i).css("background-color","#C39F82");
 			board.position(fens[i]);
 			chart.series[0].points[i].select();
 			$(".mytable").scrollTop($('td#0').offset().top);
@@ -150,7 +168,7 @@ $(document).ready(function() {
 	$('#end').on('click', function(){
 		$("td#" + i).css("background-color","");
 		i = fens.length - 1;
-		$("td#" + i).css("background-color","yellow");
+		$("td#" + i).css("background-color","#C39F82");
 		board.position(fens[i]);
 		chart.series[0].points[i].select();
 		$(".mytable").scrollTop($('td#0').offset().top);
