@@ -1,0 +1,27 @@
+/* Votre Style */
+
+
+#board {
+    width: 400px;
+    float: left;
+    margin: 20px;
+}
+
+.container{
+    width: 200px;
+    float: left;
+    margin: 20px;
+}
+
+.mytable {
+    /*width: 200px;*/
+    height: 360px !important;
+    overflow: scroll;
+}
+.buttons {
+    text-align: center;
+    margin: 10px;
+}
+button {
+    margin-left: -6px;
+}
