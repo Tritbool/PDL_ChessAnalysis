@@ -14,6 +14,7 @@
 	<div class="row-fluid">
 		<div id="board"></div>
 		<div class="container">
+			<div id="currentScore"></div>
 			<div class="mytable">
 				<table id="moves" class="table table-striped">
 				</table>
@@ -62,6 +63,32 @@ $(document).ready(function() {
 			<% } %>
 		<% } %>
 	"");
+
+	$(".mytable	td:last-child, .mytable td:nth-last-child(2)").hover(function(){
+		$(this).css('cursor', 'pointer');
+		if ($(this).css('background-color') == "rgb(249, 249, 249)" || $(this).css('background-color') == "transparent"){
+			$(this).css('background-color', '#F0D9B5');
+		}
+	});
+	$(".mytable	td:last-child, .mytable td:nth-last-child(2)").mouseleave(function() {
+		$(this).css('cursor','auto');
+		if ($(this).css('background-color') != "rgb(195, 159, 130)"){
+			$(this).css('background-color', '');
+		}
+	});
+
+	$(".mytable	td").click(function(){
+		$("td#" + i).css("background-color","");
+		i = $(this).attr('id');
+		board.position(fens[i]);
+		chart.series[0].points[i].select();
+		$("td#" + i).css("background-color","#C39F82");
+		$(".mytable").scrollTop($('td#0').offset().top);
+		$(".mytable").scrollTop($('td#' + i).offset().top - 100);
+		console.log(<%= moves[i].depths[19].scoreCp %>);
+		$("#currentScore").html('<%= moves[i].depths[19].scoreCp %>');
+	});
+
 	$('#area').highcharts({
 	   	chart: {
 	       type: 'area',
@@ -74,11 +101,11 @@ $(document).ready(function() {
 		xAxis: {
 			categories: [<% for(var i in moves) { %> '<%= moves[i].position %>' ,<% } %>],
 			plotBands: [{
-				color: '#F0D9B5', // Color value
-				from: -0.5, // Start of the plot band
-				to: <%= game.opening.length %> - 0.5, // End of the plot band
+				color: '#F0D9B5',
+				from: -0.5,
+				to: <%= game.opening.length %> - 0.5,
 				label: {
-				   text: '<%= game.opening.name %><br/><%= game.opening.variation%>' // Content of the label.
+				   text: '<%= game.opening.name %><br/><%= game.opening.variation%>'
 				}
 			}],
 		},
@@ -161,7 +188,6 @@ $(document).ready(function() {
 			chart.series[0].points[i].select(false);
 			$("td#" + i).css("background-color","");
 			i = -1;
-			// $(".mytable").scrollTop($('td#0').offset().top);
 		}
 	});
 
