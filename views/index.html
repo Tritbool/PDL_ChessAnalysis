@@ -1,210 +1,195 @@
 <!doctype html>
 
 <html class="no-js" lang="fr">
-
-<head>
+	<head>
 		<meta charset="UTF-8">
 		<title>test Chessboard</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="/static/css/bootstrap.css" media="all">
 		<link rel="stylesheet" href="/static/css/chessboard-0.3.0.min.css" media="all">
 		<link rel="stylesheet" href="/static/css/styles.css" media="all">
-</head>
-<body>
-	<div class="row-fluid">
-		<div id="board"></div>
-		<div class="container">
-			<div id="currentScore"></div>
-			<div class="mytable">
-				<table id="moves" class="table table-striped">
-				</table>
+	</head>
+	<body>
+		<div class="row-fluid">
+			<div id="board"></div>
+			<div class="container">
+				<div id="currentScore"></div>
+				<div class="mytable">
+					<table class="table table-striped">
+					</table>
+				</div>
+				<div class="buttons">
+					<button type="button" id="begin"><i class="icon-fast-backward"></i></button>
+					<button type="button" id="backward"><i class="icon-step-backward"></i></button>
+					<button type="button" id="forward"><i class="icon-step-forward"></i></button>
+					<button type="button" id="end"><i class="icon-fast-forward"></i></button>
+				</div>
 			</div>
-			<div class="buttons">
-				<button type="button" id="begin"><i class="icon-fast-backward"></i></button>
-				<button type="button" id="backward"><i class="icon-step-backward"></i></button>
-				<button type="button" id="forward"><i class="icon-step-forward"></i></button>
-				<button type="button" id="end"><i class="icon-fast-forward"></i></button>
-			</div>
+			<div id="area"></div>
 		</div>
-		<div id="area"></div>
-	</div>
+		<script type="text/javascript" src="/static/js/jquery.min.js" ></script>
+		<script type="text/javascript" src="/static/js/chessboard-0.3.0.min.js" ></script>
+		<script type="text/javascript" src="/static/js/json3.min.js" ></script>
+		<script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
+		<script type="text/javascript" src="/static/js/highcharts.js"></script>
+		<script>
+			$(document).ready(function() {
+				var pos = -1;
+				var board = ChessBoard('board', {
+					pieceTheme	: '/static/img/chesspieces/{piece}.png'
+					, position	: 'start'
+					, draggable	: false
+					, showErrors 	: 'console'
+				});
 
+				var fens = [<% for(var i in moves) { %> '<%= moves[i].fen %>' ,<% } %>];
+				var moveTable = $(".mytable");
 
-<script type="text/javascript" src="/static/js/jquery.min.js" ></script>
-<script type="text/javascript" src="/static/js/chessboard-0.3.0.min.js" ></script>
-<script type="text/javascript" src="/static/js/json3.min.js" ></script>
-<script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
-<script type="text/javascript" src="/static/js/highcharts.js"></script>
-<script>
-var board = ChessBoard('board', {
-  pieceTheme	: '/static/img/chesspieces/{piece}.png'
-  , position	: 'start'
-  , draggable	: false
-  , showErrors 	: 'console'
-});
-var i = -1;
-var fens = [<% for(var i in moves) { %> '<%= moves[i].fen %>' ,<% } %>];
+				moveTable.find($("table")).append(
+					<% for(var i in moves) { %>
+						<% if(i%2 == 0) { %>
+							<% if (moves[i].depths[19].scoreCp * -1 > 0) { %>
+								'<tr><td><%= i/2 %></td><td id="<%= i %>"><%= moves[i].position %><p>+' + <%= moves[i].depths[19].scoreCp %> * -1 + '</p></td>' +
+							<% } else if (moves[i].depths[19].scoreCp * -1 <= 0) { %>
+								'<tr><td><%= i/2 %></td><td id="<%= i %>"><%= moves[i].position %><p>' + <%= moves[i].depths[19].scoreCp %> * -1 + '</p></td>' +
+							<% } %>
+						<% } else { %>
+							<% if ( moves[i].depths[19].scoreCp > 0) { %>
+								'<td id="<%= i %>"><%= moves[i].position %><p>+' + <%= moves[i].depths[19].scoreCp %> + '</p></td></tr>' +
+							<% } else if (moves[i].depths[19].scoreCp <= 0) { %>
+								'<td id="<%= i %>"><%= moves[i].position %><p>' + <%= moves[i].depths[19].scoreCp %> + '</p></td></tr>' +
+							<% } %>
+						<% } %>
+					<% } %>
+				"");
 
-$(document).ready(function() {
-	$("#moves").append(
-		<% for(var i in moves) { %>
-			<% if(i%2 == 0) { %>
-				<% if (moves[i].depths[19].scoreCp * -1 > 0) { %>
-					'<tr><td><%= i/2 %></td><td id="<%= i %>"><%= moves[i].position %><p class="dim">+' + <%= moves[i].depths[19].scoreCp %> * -1 + '</p></td>' +
-				<% } else if (moves[i].depths[19].scoreCp * -1 <= 0) { %>
-					'<tr><td><%= i/2 %></td><td id="<%= i %>"><%= moves[i].position %><p class="dim">' + <%= moves[i].depths[19].scoreCp %> * -1 + '</p></td>' +
-				<% } %>
-			<% } else { %>
-				<% if ( moves[i].depths[19].scoreCp > 0) { %>
-					'<td id="<%= i %>"><%= moves[i].position %><p class="dim">+' + <%= moves[i].depths[19].scoreCp %> + '</p></td></tr>' +
-				<% } else if (moves[i].depths[19].scoreCp <= 0) { %>
-					'<td id="<%= i %>"><%= moves[i].position %><p class="dim">' + <%= moves[i].depths[19].scoreCp %> + '</p></td></tr>' +
-				<% } %>
-			<% } %>
-		<% } %>
-	"");
+				$('#area').highcharts({
+				   	chart: {
+				       type: 'area',
+					   height: 400,
+			           width: 1000,
+					},
+					title: {
+					   text: 'Moves score of players'
+					},
+					xAxis: {
+						categories: [<% for(var i in moves) { %> '<%= moves[i].position %>' ,<% } %>],
+						plotBands: [{
+							color: '#F0D9B5',
+							from: -0.5,
+							to: <%= game.opening.length %> - 0.5,
+							label: {
+							   text: '<%= game.opening.name %><br/><%= game.opening.variation%>'
+							}
+						}],
+					},
+					/*tooltip: {
+					    formatter: function() {
+					        return 'The value for <b>' + this.x + '</b> is <b>' + this.y + '</b>, in series '+ this.series.name;
+					    }
+					},*/
+					yAxis: {
+						// min: -200,
+						// max: 200,
+						title: {
+							text: 'Score'
+						}
+					},
+					series: [{
+						name: 'Scores',
+						data: [<% for(var i in moves) { %> <%= moves[i].depths[19].scoreCp %> ,<% } %>],
+						color: '#F4E4CB',
+						negativeColor: '#B58863',
+						point: {
+				            events: {
+				                click: function (e) {
+									moveChange(e.point.index);
+				                }
+				            }
+				        },
+						allowPointSelect: true,
+						marker: {
+							radius: 1,
+							states: {
+								select: {
+								   radius: 3,
+								   fillColor: '#B58863'
+								}
+							}
+						}
+				   }]
+				});
+				var chart = Highcharts.charts[0];
 
-	$(".mytable	td:last-child, .mytable td:nth-last-child(2)").hover(function(){
-		$(this).css('cursor', 'pointer');
-		if ($(this).css('background-color') == "rgb(249, 249, 249)" || $(this).css('background-color') == "transparent"){
-			$(this).css('background-color', '#F0D9B5');
-		}
-	});
-	$(".mytable	td:last-child, .mytable td:nth-last-child(2)").mouseleave(function() {
-		$(this).css('cursor','auto');
-		if ($(this).css('background-color') != "rgb(195, 159, 130)"){
-			$(this).css('background-color', '');
-		}
-	});
-
-	$(".mytable	td").click(function(){
-		$("td#" + i).css("background-color","");
-		i = $(this).attr('id');
-		board.position(fens[i]);
-		chart.series[0].points[i].select();
-		$("td#" + i).css("background-color","#C39F82");
-		$(".mytable").scrollTop($('td#0').offset().top);
-		$(".mytable").scrollTop($('td#' + i).offset().top - 100);
-		console.log(<%= moves[i].depths[19].scoreCp %>);
-		$("#currentScore").html('<%= moves[i].depths[19].scoreCp %>');
-	});
-
-	$('#area').highcharts({
-	   	chart: {
-	       type: 'area',
-		   height: 400,
-           width: 1000,
-		},
-		title: {
-		   text: 'Moves score of players'
-		},
-		xAxis: {
-			categories: [<% for(var i in moves) { %> '<%= moves[i].position %>' ,<% } %>],
-			plotBands: [{
-				color: '#F0D9B5',
-				from: -0.5,
-				to: <%= game.opening.length %> - 0.5,
-				label: {
-				   text: '<%= game.opening.name %><br/><%= game.opening.variation%>'
+				var moveChange = function(id){
+					moveTable.find($("td#" + pos)).css("background-color","");
+					pos = id;
+					board.position(fens[pos]);
+					moveTable.find($("td#" + pos)).css("background-color","#C39F82");
+					moveTable.scrollTop($('td#0').offset().top);
+					moveTable.scrollTop($('td#' + pos).offset().top - 100);
 				}
-			}],
-		},
-		/*tooltip: {
-		    formatter: function() {
-		        return 'The value for <b>' + this.x + '</b> is <b>' + this.y + '</b>, in series '+ this.series.name;
-		    }
-		},*/
-		yAxis: {
-			// min: -200,
-			// max: 200,
-			title: {
-				text: 'Score'
-			}
-		},
-		series: [{
-			name: 'Scores',
-			data: [<% for(var i in moves) { %> <%= moves[i].depths[19].scoreCp %> ,<% } %>],
-			color: '#F4E4CB',
-			negativeColor: '#B58863',
-			point: {
-	            events: {
-	                click: function (e) {
-						$("td#" + i).css("background-color","");
-						i = e.point.index;
-						$("td#" + i).css("background-color","#C39F82");
-						board.position(fens[i]);
-						$(".mytable").scrollTop($('td#0').offset().top);
-						$(".mytable").scrollTop($('td#' + i).offset().top - 100);
-	                }
-	            }
-	        },
-			allowPointSelect: true,
-			marker: {
-				radius: 1,
-				states: {
-					select: {
-					   radius: 3,
-					   fillColor: '#B58863'
+				var stepBegin = function(){
+					if (pos > -1){
+						board.start();
+						chart.series[0].points[pos].select(false);
+						moveTable.find($('td#' + pos)).css("background-color","");
+						moveTable.scrollTop(moveTable.find($('td#0')).offset().top - 100);
+						pos = -1;
 					}
 				}
-			}
-	   }]
-	});
-	var chart = Highcharts.charts[0];
-	$('#begin').on('click', function(){
-		board.start();
-		if (i > -1){
-			chart.series[0].points[i].select(false);
-			$("td#" + i).css("background-color","");
-			$(".mytable").scrollTop($('td#0').offset().top);
-			i = -1;
-		}
-	});
+				var stepForward = function(){
+					if (pos < fens.length - 1){
+						moveChange(pos+1);
+						chart.series[0].points[pos].select();
+					}
+				}
+				var stepBackward = function(){
+					if (pos > 0){
+						moveChange(pos-1);
+						chart.series[0].points[pos].select();
+					}
+					else{
+						stepBegin();
+					}
+				}
+				var stepEnd = function(){
+					moveChange(fens.length - 1);
+					chart.series[0].points[pos].select();
+				}
 
-	$('#forward').on('click', function(){
-		if (i < fens.length - 1){
-			$("td#" + i).css("background-color","");
-			i++;
-			$("td#" + i).css("background-color","#C39F82");
-			board.position(fens[i]);
-			chart.series[0].points[i].select();
-			$(".mytable").scrollTop($('td#0').offset().top);
-			$(".mytable").scrollTop($('td#' + i).offset().top - 100);
-		}
-	});
+				$(".mytable	td").click(function(){
+					moveChange($(this).attr('id'));
+					chart.series[0].points[pos].select();
+				});
 
-	$('#backward').on('click', function(){
-		if (i > 0){
-			$("td#" + i).css("background-color","");
-			i--;
-			$("td#" + i).css("background-color","#C39F82");
-			board.position(fens[i]);
-			chart.series[0].points[i].select();
-			$(".mytable").scrollTop($('td#0').offset().top);
-			$(".mytable").scrollTop($('td#' + i).offset().top - 100);
-		}
-		else{
-			board.start();
-			chart.series[0].points[i].select(false);
-			$("td#" + i).css("background-color","");
-			i = -1;
-		}
-	});
+				$('.buttons button').on('click', function(){
+					if ($(this).attr("id") == "forward"){
+						stepForward();
+					}
+					if ($(this).attr("id") == "backward"){
+						stepBackward();
+					}
+					if ($(this).attr("id") == "begin"){
+						stepBegin();
+					}
+					if ($(this).attr("id") == "end"){
+						stepEnd();
+					}
+				});
 
-	$('#end').on('click', function(){
-		$("td#" + i).css("background-color","");
-		i = fens.length - 1;
-		$("td#" + i).css("background-color","#C39F82");
-		board.position(fens[i]);
-		chart.series[0].points[i].select();
-		$(".mytable").scrollTop($('td#0').offset().top);
-		$(".mytable").scrollTop($('td#' + i).offset().top - 20);
-	});
-});
-</script>
-
-
-
-</body>
-
+				moveTable.find($("td:last-child, td:nth-last-child(2)")).hover(function(){
+					$(this).css('cursor', 'pointer');
+					if ($(this).css('background-color') == "rgb(249, 249, 249)" || $(this).css('background-color') == "transparent"){
+						$(this).css('background-color', '#F0D9B5');
+					}
+				}, function() {
+					$(this).css('cursor','auto');
+					if ($(this).css('background-color') != "rgb(195, 159, 130)"){
+						$(this).css('background-color', '');
+					}
+				});
+			});
+		</script>
+	</body>
 </html>

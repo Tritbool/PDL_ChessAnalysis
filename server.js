@@ -14,18 +14,6 @@ var promise     = require('es6-promise').Promise
     , app       = express()
     ;
 
-/*Object.prototype.count = function() {
-    var that    = this
-        , count = 0
-        ;
-    for(var property in that) {
-        if(that.hasOwnProperty(property)) {
-            count++;
-        }
-    }
-    return count;
-};*/
-
 var parseMoves = function(idGame){
     return new Promise(function(resolve, reject) {
         database.createConnection("localhost", "root", "", "chessdb")
