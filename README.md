@@ -23,6 +23,6 @@ Requirements:
     npm install
 
 - In server.js, at line 31, check and modify database parameters if necessary
-    example: ("<your server address>", "<your username>", "<your password>", "<database's name>")
+    example: ("your server address", "your username", "your password", "database's name")
 
 - In browser, by default, you can go to application by http://localhost:3000/games/{an id}
