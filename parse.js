@@ -15,26 +15,33 @@ var parseMoves = function(idGame){
             .then(function(connection){
                 database.getGame(connection, idGame)
                     .then(function(results){
+                        var maxDepth = 100;
                         results.rows[0] = _.forEach(results.rows[0], function(move){
                             parseLog(move.log)
                                 .then(function(depths){
+                                    if (depths.length < maxDepth){
+                                        maxDepth = depths.length;
+                                    }
+                                    move.maxDepth = maxDepth;
                                     move.depths = depths;
                                 })
                                 .catch(function(error){
-                                    reject(error);
+                                    move.maxDepth = maxDepth;
+                                    move.depths = _.fill(Array(maxDepth), 0);
                                 })
                             ;
                         });
                         return results;
                     })
                     .then(function(results){
+                        var maxDepth = results.rows[0][results.rows[0].length - 1].maxDepth;
                         var data = {};
                         data.moves = _.map(results.rows[0], function(move){
                             return {
                                 num : move.halfMove
                                 , position : move.move
                                 , fen : move.idFen
-                                , depths : move.depths
+                                , depths : _.slice(move.depths, 0, maxDepth)
                             };
                         });
                         data.game = {
@@ -75,32 +82,23 @@ var parseMoves = function(idGame){
 
 var parseLog = function(log){
     return new Promise(function(resolve, reject) {
-        var jsondepths = [];
-        if (log !== null){
+        var scoreDepths = [];
+        if (log !== null && log.search("info depth") > -1){
             var depths = log.split("info depth");
+            var length = 0;
             for (var i in depths) {
-                var depth = {};
-                var startSeldepth = depths[i].search("seldepth");
-                depth.level = parseInt(depths[i].slice(0,startSeldepth));
-                if (!isNaN(depth.level)){
-                    var startMultipv = depths[i].search("multipv");
-                    var startScoreCp = depths[i].search("score cp");
-                    var startNodes = depths[i].search("nodes");
-                    var startNps = depths[i].search("nps");
-                    var startTime = depths[i].search("time");
-                    var startPv = depths[i].search(" pv");
-                    depth.seldepth = parseInt(depths[i].slice(startSeldepth + "seldepth".length, startMultipv));
-                    depth.multipv = parseInt(depths[i].slice(startMultipv + "multipv".length, startScoreCp));
-                    depth.scoreCp = parseInt(depths[i].slice(startScoreCp + "score cp".length, startNodes));
-                    depth.nodes = parseInt(depths[i].slice(startNodes + "nodes".length, startNps));
-                    depth.nps = parseInt(depths[i].slice(startNps + "nps".length, startTime));
-                    depth.time = parseInt(depths[i].slice(startTime + "time".length, startPv));
-                    depth.pv = depths[i].slice(startPv + " pv ".length, depths[i].length);
-                    jsondepths.push(depth);
+                var startScoreCp = depths[i].search("score cp");
+                var startNodes = depths[i].search("nodes");
+                var scoreCp = parseInt(depths[i].slice(startScoreCp + "score cp".length, startNodes));
+                if (!isNaN(scoreCp)){
+                    scoreDepths.push(scoreCp);
                 }
             }
+            resolve(scoreDepths);
         }
-        resolve(jsondepths);
+        else{
+            reject();
+        }
     });
 };
 

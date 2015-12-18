@@ -53,25 +53,54 @@
 		<script type="text/javascript" src="/static/js/highcharts.js"></script>
 		<script>
 			$(document).ready(function() {
-				var depth = <%= moves[0].depths.length - 1 %>;
+				var depth = <%= moves[0].depths.length %> - 1;
+				var moves = [<% for(var i in moves) { %> {
+					num : <%= moves[i].num %>
+					, position : '<%= moves[i].position %>'
+					, fen : '<%= moves[i].fen %>'
+					, depths : [<% for(var j in moves[i].depths) { %> <%= moves[i].depths[j] %>,<% } %>]
+				},<% } %>
+				];
 				var pos = -1;
-				var fens = [<% for(var i in moves) { %> '<%= moves[i].fen %>' ,<% } %>];
 				var moveTable = $(".mytable");
-
+				var fens = [];
+				var serie = [];
+				var categories = [];
+				for (var i in moves) {
+					fens.push(moves[i].fen);
+					serie.push(moves[i].depths[depth]);
+					categories.push(moves[i].position);
+				}
 				var board = ChessBoard('chessboard', {
 					pieceTheme	: '/static/img/chesspieces/{piece}.png'
 					, position	: 'start'
 					, draggable	: false
 					, showErrors : 'console'
 				});
-
-				moveTable.find($("table")).append('<% for(var i in moves) { %><% if(i%2 == 0) { %><% if (moves[i].depths[19].scoreCp * -1 > 0) { %><tr><td><%= i/2 %></td><td id="pos<%= i %>"><%= moves[i].position %><p>+' + <%= moves[i].depths[19].scoreCp %> * -1 + '</p></td><% } else if (moves[i].depths[19].scoreCp * -1 <= 0) { %><tr><td><%= i/2 %></td><td id="pos<%= i %>"><%= moves[i].position %><p>' + <%= moves[i].depths[19].scoreCp %> * -1 + '</p></td><% } %><% } else { %><% if ( moves[i].depths[19].scoreCp > 0) { %><td id="pos<%= i %>"><%= moves[i].position %><p>+' + <%= moves[i].depths[19].scoreCp %> + '</p></td></tr><% } else if (moves[i].depths[19].scoreCp <= 0) { %><td id="pos<%= i %>"><%= moves[i].position %><p>' + <%= moves[i].depths[19].scoreCp %> + '</p></td></tr><% } %><% } %><% } %>');
-
+				var table;
+				for (var i in moves) {
+					if (i%2 == 0){
+						if (moves[i].depths[depth] * -1 > 0) {
+							table += '<tr><td>' + i/2 + '</td><td id="pos' + i + '">' + moves[i].position + '<p>+' +  moves[i].depths[depth] * -1 + '</p></td>';
+						}
+						else{
+							table += '<tr><td>' + i/2 + '</td><td id="pos' + i + '">' + moves[i].position + '<p>' +  moves[i].depths[depth] * -1 + '</p></td>';
+						}
+					}
+					else{
+						if (moves[i].depths[depth] > 0) {
+							table += '<td id="pos' + i + '">' + moves[i].position + '<p>+' +  moves[i].depths[depth] + '</p></td></tr>';
+						}
+						else{
+							table += '<td id="pos' + i + '">' + moves[i].position + '<p>' +  moves[i].depths[depth] + '</p></td></tr>';
+						}
+					}
+				}
+				moveTable.find($("table")).append(table);
 				$(".dropdown-menu").append('<% for(var i in moves[0].depths	) { %><li id="depth<%= i %>" style="text-align:center;"><span><%= i %></span></li><% } %> ');
 
 				$("#infos #event").append('<p><%= game.event.name %></p><p><%= game.event.city %></p><p><%= game.event.date %></p>');
 				$("#infos #players table").append('<tr><td>Nom<br/>Classement ELO</td><td><%= game.players.white.name %><br/><%= game.players.white.elo %></td><td><i class="icon icon-adjust"></i></td><td><%= game.players.black.name %></br><%= game.players.black.elo %></td></tr>');
-
 				var options = {
 				   	chart: {
 						type: 'area',
@@ -83,7 +112,7 @@
 					   text: 'Moves score of players'
 					},
 					xAxis: {
-						categories: [<% for(var i in moves) { %> '<%= moves[i].position %>' ,<% } %>],
+						categories: categories,
 						plotBands: [{
 							color: '#F0D9B5',
 							from: -0.5,
@@ -107,7 +136,7 @@
 					},
 					series: [{
 						name: 'Scores',
-						data: [<% for(var i in moves){ %><%= moves[i].depths[10].scoreCp %> ,<% } %>],
+						data: serie,
 						color: '#F4E4CB',
 						negativeColor: '#B58863',
 						point: {
@@ -134,8 +163,13 @@
 				console.log(chart);
 
 				$('#currentScore li').on('click', function(){
-					var depth = parseInt($(this).attr('id').substr(5));
-					new Highcharts.Chart(options);
+					depth = parseInt($(this).attr('id').substr(5));
+					serie = [];
+					for (var i in moves){
+						serie.push(moves[i].depths[depth]);
+					}
+					options.series[0].data = serie;
+					chart = new Highcharts.Chart(options);
 				});
 
 				var moveChange = function(id){

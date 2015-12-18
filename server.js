@@ -9,7 +9,7 @@ var promise     = require('es6-promise').Promise
     , express   = require('express')
     , _         = require('lodash')
     , cons      = require('consolidate')
-    , parse  = require('./parse')
+    , parse     = require('./parse')
     , app       = express()
     ;
 
