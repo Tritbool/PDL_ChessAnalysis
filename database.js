@@ -59,7 +59,7 @@ var getGame = function(connection, idGame){
                 + " from move m, fen f"
                 + " where m.idfen=f.id and m.idGame = " + idGame + " order by halfMove ASC;"
                 // get meta-data of a game
-                + " Select e.name as eventName, e.city as eventCity, white.name as whiteName, black.name as blackName, g.whiteElo, g.blackElo, g.date, g.movesSAN, o.opening, o.variation, o.nbMoves"
+                + " Select e.name as eventName, e.city as eventCity, white.name as whiteName, black.name as blackName, g.whiteElo, g.blackElo, g.date, o.opening, o.variation, o.nbMoves"
                 + " from game g, player white, player black, event e, opening o"
                 + " where white.id=g.whiteId and black.id=g.blackId and e.id=g.eventId and o.id=g.ecoId and g.id=" + idGame +";")
             .then(function(results){
@@ -71,22 +71,6 @@ var getGame = function(connection, idGame){
         ;
     });
 };
-
-/*createConnection("localhost", "root", "", "chessdb")
-    .then(function(connection){
-        getGame(connection, 1)
-            .then(function(results){
-                console.log(JSON.stringify(results,null,4));
-            })
-            .catch(function(error){
-                console.log(error);
-            })
-        ;
-    })
-    .catch(function(error){
-        console.log(error);
-    })
-;*/
 
 module.exports = {
     createConnection    : createConnection
