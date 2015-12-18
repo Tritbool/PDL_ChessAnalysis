@@ -12,7 +12,7 @@
 <!--		<link rel="stylesheet" href="/static/css/styles.css" media="all">-->
         <!-- Custom styles for this template -->
         <link rel="stylesheet" href="/static/css/theme.css">
-        
+
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -20,7 +20,7 @@
     <![endif]-->
 	</head>
 	<body role="document">
-        
+
             <!-- Fixed navbar -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -35,7 +35,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Accueil</a></li>
+            <li><a href="/">Accueil</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Analyser <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -65,20 +65,18 @@
 			<div id="infos">
 				<div id="event">
 					<h3>Event</h3>
+					<table class="table">
+					</table>
 				</div>
 				<div id="players">
 					<h3>Players</h3>
 					<table class="table">
-						<tr>
-						</tr>
-						<tr>
-						</tr>
 					</table>
 				</div>
 			</div>
 			<div id="chessboard"></div>
-			<div class="container">
-				<div id="currentScore">
+			<div class="moves">
+				<div id="depths">
 					<div class="btn-group">
 					   <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Profondeur d'analyse<span class="caret"></span></button>
 					   <ul class="dropdown-menu">
@@ -96,7 +94,7 @@
 					<button type="button" id="end"><i class="icon-fast-forward"></i></button>
 				</div>
 			</div>
-			
+
 		</div>
       </div>
 
@@ -109,216 +107,58 @@
 -->
 		</ul>
 		<div id="area"></div>
-		
+
       </div>
-      
+
       <div class="mastfoot">
             <div class="row">
                 <div class="col-md-12 text-center"><a href="/about">Qui sommes nous?</a></div>
             </div>
           </div>
-      
+
     </div> <!-- /container -->
-        
-        
-		
+
+
+
 		<script type="text/javascript" src="/static/js/jquery.min.js" ></script>
 		<script type="text/javascript" src="/static/js/chessboard-0.3.0.min.js" ></script>
 		<script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
 		<script type="text/javascript" src="/static/js/highcharts.js"></script>
+		<script type="text/javascript" src="/static/js/game.js"></script>
 		<script>
 			$(document).ready(function() {
 				var depth = <%= moves[0].depths.length %> - 1;
-				var moves = [<% for(var i in moves) { %> {
-					num : <%= moves[i].num %>
-					, position : '<%= moves[i].position %>'
-					, fen : '<%= moves[i].fen %>'
-					, depths : [<% for(var j in moves[i].depths) { %> <%= moves[i].depths[j] %>,<% } %>]
-				},<% } %>
+				var moves = [<% for(var i in moves) { %>
+					{
+						num : <%= moves[i].num %>
+						, position : '<%= moves[i].position %>'
+						, fen : '<%= moves[i].fen %>'
+						, depths : [<% for(var j in moves[i].depths) { %> <%= moves[i].depths[j] %>,<% } %>]
+					},<% } %>
 				];
-				var pos = -1;
-				var moveTable = $(".mytable");
-				var fens = [];
-				var serie = [];
-				var categories = [];
-				for (var i in moves) {
-					fens.push(moves[i].fen);
-					serie.push(moves[i].depths[depth]);
-					categories.push(moves[i].position);
-				}
-				var board = ChessBoard('chessboard', {
-					pieceTheme	: '/static/img/chesspieces/{piece}.png'
-					, position	: 'start'
-					, draggable	: false
-					, showErrors : 'console'
-				});
-				var table;
-				for (var i in moves) {
-					if (i%2 == 0){
-						if (moves[i].depths[depth] * -1 > 0) {
-							table += '<tr><td>' + i/2 + '</td><td id="pos' + i + '">' + moves[i].position + '<p>+' +  moves[i].depths[depth] * -1 + '</p></td>';
+				var game = {
+					event : {
+						name    : '<%= game.event.name %>'
+						, city  : '<%= game.event.city %>'
+						, date  : '<%= game.event.date %>'
+					}
+					, players : {
+						white : {
+							name    : '<%= game.players.white.name %>'
+							, elo   : <%= game.players.white.elo %>
 						}
-						else{
-							table += '<tr><td>' + i/2 + '</td><td id="pos' + i + '">' + moves[i].position + '<p>' +  moves[i].depths[depth] * -1 + '</p></td>';
+						, black : {
+							name    : '<%= game.players.black.name %>'
+							, elo   : <%= game.players.black.elo %>
 						}
 					}
-					else{
-						if (moves[i].depths[depth] > 0) {
-							table += '<td id="pos' + i + '">' + moves[i].position + '<p>+' +  moves[i].depths[depth] + '</p></td></tr>';
-						}
-						else{
-							table += '<td id="pos' + i + '">' + moves[i].position + '<p>' +  moves[i].depths[depth] + '</p></td></tr>';
-						}
+					, opening : {
+						name        : '<%= game.opening.name %>'
+						, variation : '<%= game.opening.variation %>'
+						, length    : <%= game.opening.length %>
 					}
-				}
-				moveTable.find($("table")).append(table);
-				$(".dropdown-menu").append('<% for(var i in moves[0].depths	) { %><li id="depth<%= i %>" style="text-align:center;"><span><%= i %></span></li><% } %> ');
-
-				$("#infos #event").append('<p><%= game.event.name %></p><p><%= game.event.city %></p><p><%= game.event.date %></p>');
-				$("#infos #players table").append('<tr><td>Nom<br/>Classement ELO</td><td><%= game.players.white.name %><br/><%= game.players.white.elo %></td><td><i class="icon icon-adjust"></i></td><td><%= game.players.black.name %></br><%= game.players.black.elo %></td></tr>');
-
-				var options = {
-				   	chart: {
-						type: 'area',
-						renderTo: "area",
-						height: 400,
-						width: 1000,
-					},
-					title: {
-					   text: 'Moves score of players'
-					},
-					xAxis: {
-						categories: categories,
-						plotBands: [{
-							color: '#F0D9B5',
-							from: -0.5,
-							to: <%= game.opening.length %> - 0.5,
-							label: {
-							   text: '<%= game.opening.name %><br/><%= game.opening.variation%>'
-							}
-						}],
-					},
-					yAxis: {
-						title: {
-							text: 'Score'
-						}
-					},
-					series: [{
-						name: 'Scores',
-						data: serie,
-						color: '#F4E4CB',
-						negativeColor: '#B58863',
-						point: {
-				            events: {
-				                click: function (e) {
-									moveChange(e.point.index);
-				                }
-				            }
-				        },
-						allowPointSelect: true,
-						marker: {
-							radius: 1,
-							states: {
-								select: {
-								   radius: 3,
-								   fillColor: '#B58863'
-								}
-							}
-						}
-				   }]
 				};
-
-				var chart = new Highcharts.Chart(options);
-
-				$('#currentScore li').on('click', function(){
-					depth = parseInt($(this).attr('id').substr(5));
-					serie = [];
-					for (var i in moves){
-						serie.push(moves[i].depths[depth]);
-					}
-					options.series[0].data = serie;
-					chart = new Highcharts.Chart(options);
-				});
-
-				var moveChange = function(id){
-					if (pos >= 0 && pos < fens.length){
-						var formTd = moveTable.find($("td#pos" + pos));
-						formTd.css("background-color","");
-						formTd.css("color","black");
-						formTd.css("font-weight","normal");
-						}
-					pos = parseInt(id);
-					var actTd = moveTable.find($("td#pos" + pos));
-					board.position(fens[pos]);
-					actTd.css("background-color","#C39F82");
-					actTd.css("color","#755F4E");
-					actTd.css("font-weight","bold");
-					moveTable.scrollTop(moveTable.find($("td#pos0")).offset().top);
-					moveTable.scrollTop(actTd.offset().top - 100);
-				}
-				var stepBegin = function(){
-					if (pos > -1){
-						board.start();
-						chart.series[0].points[pos].select(false);
-						var formTd = moveTable.find($("td#pos" + pos));
-						formTd.css("background-color","");
-						formTd.css("color","black");
-						formTd.css("font-weight","normal");
-						moveTable.scrollTop(moveTable.find($('td#pos0')).offset().top - 100);
-						pos = -1;
-					}
-				}
-				var stepForward = function(){
-					if (pos < fens.length - 1){
-						moveChange(pos+1);
-						chart.series[0].points[pos].select();
-					}
-				}
-				var stepBackward = function(){
-					if (pos > 0){
-						moveChange(pos-1);
-						chart.series[0].points[pos].select();
-					}
-					else{
-						stepBegin();
-					}
-				}
-				var stepEnd = function(){
-					moveChange(fens.length - 1);
-					chart.series[0].points[pos].select();
-				}
-
-				$('.buttons button').on('click', function(){
-					if ($(this).attr("id") == "forward"){
-						stepForward();
-					}
-					if ($(this).attr("id") == "backward"){
-						stepBackward();
-					}
-					if ($(this).attr("id") == "begin"){
-						stepBegin();
-					}
-					if ($(this).attr("id") == "end"){
-						stepEnd();
-					}
-				});
-
-				moveTable.find($("td")).click(function(){
-					moveChange($(this).attr('id').substr(3));
-					chart.series[0].points[pos].select();
-				});
-
-				moveTable.find($("td:last-child, td:nth-last-child(2)")).hover(function(){
-					$(this).css('cursor', 'pointer');
-					if ($(this).css('background-color') == "rgb(249, 249, 249)" || $(this).css('background-color') == "transparent"){
-						$(this).css('background-color', '#F0D9B5');
-					}
-				}, function() {
-					$(this).css('cursor','auto');
-					if ($(this).css('background-color') != "rgb(195, 159, 130)"){
-						$(this).css('background-color', '');
-					}
-				});
+				$(document).myPlugin({depth: depth, game:game, moves: moves});
 			});
 		</script>
 	</body>

@@ -74,7 +74,6 @@ var getGame = function(connection, idGame){
 
 module.exports = {
     createConnection    : createConnection
-    , request           : request
     , end               : end
     , getGame           : getGame
 };

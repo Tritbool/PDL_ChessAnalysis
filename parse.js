@@ -9,9 +9,9 @@ var promise     = require('es6-promise').Promise
     , database  = require('./database')
     ;
 
-var parseMoves = function(idGame){
+var parseMoves = function(idGame, options){
     return new Promise(function(resolve, reject) {
-        database.createConnection("localhost", "root", "root", "chessdb")
+        database.createConnection("localhost",options.login, options.pass, options.database)
             .then(function(connection){
                 database.getGame(connection, idGame)
                     .then(function(results){
