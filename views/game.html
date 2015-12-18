@@ -101,6 +101,7 @@
 
 				$("#infos #event").append('<p><%= game.event.name %></p><p><%= game.event.city %></p><p><%= game.event.date %></p>');
 				$("#infos #players table").append('<tr><td>Nom<br/>Classement ELO</td><td><%= game.players.white.name %><br/><%= game.players.white.elo %></td><td><i class="icon icon-adjust"></i></td><td><%= game.players.black.name %></br><%= game.players.black.elo %></td></tr>');
+
 				var options = {
 				   	chart: {
 						type: 'area',
@@ -122,14 +123,7 @@
 							}
 						}],
 					},
-					/*tooltip: {
-					    formatter: function() {
-					        return 'The value for <b>' + this.x + '</b> is <b>' + this.y + '</b>, in series '+ this.series.name;
-					    }
-					},*/
 					yAxis: {
-						// min: -200,
-						// max: 200,
 						title: {
 							text: 'Score'
 						}
@@ -158,9 +152,8 @@
 						}
 				   }]
 				};
-				new Highcharts.Chart(options);
-				var chart = Highcharts.charts[0];
-				console.log(chart);
+
+				var chart = new Highcharts.Chart(options);
 
 				$('#currentScore li').on('click', function(){
 					depth = parseInt($(this).attr('id').substr(5));
