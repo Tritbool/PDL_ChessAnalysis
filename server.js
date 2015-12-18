@@ -27,9 +27,15 @@ app.get('/games/:id', function (req, res) {
             res.render('game.html',data);
         })
         .catch(function(error){
-            reject(error);
+            console.log(error);
         })
     ;
+});
+app.get('/about', function(req,res){
+    res.render('about.html');
+});
+app.get('/contact', function(req,res){
+    res.render('contact.html');
 });
 
 var listener = app.listen(3000, function(){

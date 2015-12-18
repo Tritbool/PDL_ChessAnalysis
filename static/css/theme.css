@@ -1,0 +1,132 @@
+/*--------------------------------
+    BODY
+---------------------------------*/
+body {
+  padding-top: 70px;
+  padding-bottom: 30px;
+  background-color: #546474;
+}
+
+a {
+    color : #FDFDFD;
+}
+
+a:focus, a:hover {
+    color: #2E3E4E;
+    text-decoration: underline;
+}
+
+/*--------------------------------
+    NAVBAR
+---------------------------------*/
+.navbar-inverse {
+    background-color: #2E3E4E;
+    border-color: #333333;
+}
+
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
+    color: #F1F1F1;
+    background-color: #546474;
+}
+
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
+    color: #FFF;
+    background-color: #333333;
+}
+
+/*--------------------------------
+    JUMBOTRON
+---------------------------------*/
+.jumbotron a {
+    color : #333333;
+}
+
+/*--------------------------------
+    CHESS PART
+---------------------------------*/
+#chessboard {
+    width: 400px;
+    float: left;
+    margin: 10px;
+}
+
+.mytable {
+    height: 360px !important;
+    overflow-y: scroll;
+    border: 1px solid #B58863;
+}
+
+#infos #players{
+    margin: 10px;
+    width:300px;
+    text-align: center;
+}
+#infos #players table tr td{
+    text-align: center;
+    vertical-align: middle;
+    border-top: 1px solid #B58863;
+    border-bottom: 1px solid #B58863;
+}
+#infos #players table td:first-child{
+    /*min-width:110px;*/
+    background-color: #F0D9B5;
+    border-left: 1px solid #B58863;
+}
+#infos #players table td:not(:nth-last-child(2)){
+    min-width:110px;
+}
+#infos #players table td:last-child{
+    border-right: 1px solid #B58863;
+}
+#currentScore {
+    font-size: large;
+}
+
+.mytable table tr td{
+    line-height: 10px;
+    border-color: #B58863;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.mytable table tr td:first-child {
+    max-width: 10px;
+    background-color: #F0D9B5;
+    text-align: justify;
+}
+.mytable table td p{
+    font-size: x-small;
+    float: right;
+    color: grey;
+}
+.buttons {
+    text-align: center;
+    margin: 10px;
+}
+.buttons button {
+    margin-left: -4px;
+    background-color: #F0D9B5;
+    border-color:  #B58863;
+    /*border: 1px solid;*/
+}
+
+/*--------------------------------
+    THEME
+---------------------------------*/
+
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.theme-showcase > p > .btn {
+  margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+  width: auto;
+}
