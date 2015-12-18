@@ -51,7 +51,10 @@
 
         $("#infos #players table").append('<tr><td>Nom<br/>Classement ELO</td><td>' + game.players.white.name + '<br/>' + game.players.white.elo +
                     '</td><td><i class="icon icon-adjust"></i></td><td>' + game.players.black.name + '<br/>' + game.players.black.elo + '</td></tr>');
-        $("#infos #event table").append('<tr><td>Nom<br/>Ville</br>Date</td><td>' + game.event.name + '<br/>' + game.event.city + '<br/>' + game.event.date + '</td></tr>');
+        $("#infos #ev table").append('<tr><td>Nom</td><td>'+ game.event.name + '</td></tr>' +
+            '<tr><td>Ville</td><td>'+ game.event.city + '</td></tr>' +
+            '<tr><td>Date</td><td>'+ game.event.date + '</td></tr>'
+        );
 
         var options = {
             chart: {
@@ -118,19 +121,21 @@
 
         var moveChange = function(id){
             if (pos >= 0 && pos < fens.length){
-                var formTd = moveTable.find($("td#pos" + pos));
+                var formTd = moveTable.find($("#pos" + pos));
                 formTd.css("background-color","");
                 formTd.css("color","black");
                 formTd.css("font-weight","normal");
-                }
+            }
             pos = parseInt(id);
-            var actTd = moveTable.find($("td#pos" + pos));
-            board.position(fens[pos]);
-            actTd.css("background-color","#C39F82");
-            actTd.css("color","#755F4E");
-            actTd.css("font-weight","bold");
-            moveTable.scrollTop(moveTable.find($("td#pos0")).offset().top);
-            moveTable.scrollTop(actTd.offset().top - 100);
+            if (pos >= 0 && pos < fens.length){
+                moveTable.scrollTop(0);
+                var actTd = moveTable.find($("#pos" + pos));
+                board.position(fens[pos]);
+                actTd.css("background-color","#C39F82");
+                actTd.css("color","#755F4E");
+                actTd.css("font-weight","bold");
+                moveTable.scrollTop(actTd.offset().top - 303);
+            }
         };
         var stepBegin = function(){
             if (pos > -1){
@@ -140,7 +145,7 @@
                 formTd.css("background-color","");
                 formTd.css("color","black");
                 formTd.css("font-weight","normal");
-                moveTable.scrollTop(moveTable.find($('td#pos0')).offset().top - 100);
+                moveTable.scrollTop(0);
                 pos = -1;
             }
         };
@@ -160,8 +165,10 @@
             }
         };
         var stepEnd = function(){
-            moveChange(fens.length - 1);
-            chart.series[0].points[pos].select();
+            if (pos < fens.length - 1){
+                moveChange(fens.length - 1);
+                chart.series[0].points[pos].select();
+            }
         };
 
         $('.buttons button').on('click', function(){
@@ -181,7 +188,9 @@
 
         moveTable.find($("td")).click(function(){
             moveChange($(this).attr('id').substr(3));
-            chart.series[0].points[pos].select();
+            if (chart.series[0].points[pos].selected === false){
+                chart.series[0].points[pos].select();
+            }
         });
 
         moveTable.find($("td:last-child, td:nth-last-child(2)")).hover(function(){

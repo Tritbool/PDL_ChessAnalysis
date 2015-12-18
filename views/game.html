@@ -63,26 +63,27 @@
         <p>Plateau Partie d'échec</p>
 		<div class="row-fluid">
 			<div id="infos">
-				<div id="event">
-					<h3>Event</h3>
-					<table class="table">
-					</table>
-				</div>
-				<div id="players">
-					<h3>Players</h3>
-					<table class="table">
-					</table>
-				</div>
-			</div>
-			<div id="chessboard"></div>
-			<div class="moves">
 				<div id="depths">
 					<div class="btn-group">
-					   <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Profondeur d'analyse<span class="caret"></span></button>
+					   <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Profondeur d'analyse <span class="caret"></span></button>
 					   <ul class="dropdown-menu">
 					   </ul>
 				   </div>
 				</div>
+				<div id="ev">
+					<h3>Event</h3>
+					<table class="table table-striped">
+					</table>
+				</div>
+				<div id="players">
+					<h3>Players</h3>
+					<table class="table table-striped">
+					</table>
+				</div>
+			</div>
+			<div id="chessboard">
+			</div>
+			<div id="moves">
 				<div class="mytable">
 					<table class="table table-striped">
 					</table>
@@ -94,7 +95,6 @@
 					<button type="button" id="end"><i class="icon-fast-forward"></i></button>
 				</div>
 			</div>
-
 		</div>
       </div>
 
@@ -120,7 +120,7 @@
 
 
 
-		<script type="text/javascript" src="/static/js/jquery.min.js" ></script>
+		<script type="text/javascript" src="/static/js/jquery.js" ></script>
 		<script type="text/javascript" src="/static/js/chessboard-0.3.0.min.js" ></script>
 		<script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
 		<script type="text/javascript" src="/static/js/highcharts.js"></script>
