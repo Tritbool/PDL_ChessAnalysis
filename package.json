@@ -1,36 +1,36 @@
 {
-  "name": "chessAnalysis",
-  "version": "0.0.1",
-  "description": "chessAnalysis",
-  "author": "Rémi HAUPERPIN-BONNEAU <remi.hauperpinbonneau@live.fr>",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DD4444/PDL_ChessAnalysis.git"
-  },
-  "keywords": [
-    "chess",
-    "analysis",
-    "elo",
-    "rating",
-    "stockfish"
-  ],
-  "private": true,
-  "analyze": true,
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/DD4444/PDL_ChessAnalysis/issues"
-  },
-  "homepage": "https://github.com/DD4444/PDL_ChessAnalysis#readme",
-  "dependencies": {
-    "chess.js": "^0.9.2",
-    "consolidate": "^0.13.1",
-    "es6-promise": "^3.0.2",
-    "express": "^4.13.3",
-    "lodash": "^3.10.1",
-    "mysql": "^2.9.0"
-  }
+    "name": "chessAnalysis",
+    "version": "0.0.1",
+    "description": "chessAnalysis",
+    "author": "Rémi HAUPERPIN-BONNEAU <remi.hauperpinbonneau@live.fr>",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DD4444/PDL_ChessAnalysis.git"
+    },
+    "keywords": [
+        "chess",
+        "analysis",
+        "elo",
+        "rating",
+        "stockfish"
+    ],
+    "private": true,
+    "analyze": true,
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/DD4444/PDL_ChessAnalysis/issues"
+    },
+    "homepage": "https://github.com/DD4444/PDL_ChessAnalysis#readme",
+    "dependencies": {
+        "chess.js": "^0.9.2",
+        "consolidate": "^0.13.1",
+        "es6-promise": "^3.0.2",
+        "express": "^4.13.3",
+        "lodash": "^3.10.1",
+        "mysql": "^2.9.0"
+    }
 }

@@ -1,23 +1,61 @@
+/*--------------------------------
+    BODY
+---------------------------------*/
+body {
+  padding-top: 70px;
+  padding-bottom: 30px;
+  background-color: #546474;
+}
+
+a {
+    color : #FDFDFD;
+}
+
+a:focus, a:hover {
+    color: #2E3E4E;
+    text-decoration: underline;
+}
+
+/*--------------------------------
+    NAVBAR
+---------------------------------*/
+.navbar-inverse {
+    background-color: #2E3E4E;
+    border-color: #333333;
+}
+
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
+    color: #F1F1F1;
+    background-color: #546474;
+}
+
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
+    color: #FFF;
+    background-color: #333333;
+}
+
+/*--------------------------------
+    JUMBOTRON
+---------------------------------*/
+.jumbotron a {
+    color : #333333;
+}
+
+/*--------------------------------
+    CHESS PART
+---------------------------------*/
 #chessboard {
     width: 400px;
     float: left;
     margin: 10px;
 }
-.container{
-    width: 200px;
-    float: left;
-    margin: 10px;
-    margin-left: 0px;
-}
-.icon-adjust {
-    margin-left: 5px;
-    margin-right: 5px;
-}
+
 .mytable {
     height: 360px !important;
     overflow-y: scroll;
     border: 1px solid #B58863;
 }
+
 #infos #players{
     margin: 10px;
     width:300px;
@@ -43,9 +81,7 @@
 #currentScore {
     font-size: large;
 }
-/*.mytable table tr:first-child{
-    border: none;
-}*/
+
 .mytable table tr td{
     line-height: 10px;
     border-color: #B58863;
@@ -75,4 +111,22 @@
     background-color: #F0D9B5;
     border-color:  #B58863;
     /*border: 1px solid;*/
+}
+
+/*--------------------------------
+    THEME
+---------------------------------*/
+
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.theme-showcase > p > .btn {
+  margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+  width: auto;
 }
