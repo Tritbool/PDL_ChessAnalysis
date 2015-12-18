@@ -11,7 +11,7 @@ var promise     = require('es6-promise').Promise
 
 var parseMoves = function(idGame, options){
     return new Promise(function(resolve, reject) {
-        database.createConnection("localhost",options.login, options.pass, options.database)
+        database.createConnection(options.host,options.login, options.pass, options.database)
             .then(function(connection){
                 database.getGame(connection, idGame)
                     .then(function(results){

@@ -16,13 +16,18 @@ Installation
 Requirements:
   Node.js:
   https://nodejs.org/en/download/
-  
+
   SQL Base like Wamp
-  
+
 - In the project, install dependencies:
     npm install
 
-- In server.js, at line 31, check and modify database parameters if necessary
-    example: ("your server address", "your username", "your password", "database's name")
+- You just have to execute in terminal
+```
+> node server.js
+```
+    It will ask for your identifiers to connect the database
 
-- In browser, by default, you can go to application by http://localhost:3000/games/{an id}
+- In browser, by default, you can go to application by
+    - homepage : http://localhost:3000/
+    - a specific game :http://localhost:3000/games/{id}
