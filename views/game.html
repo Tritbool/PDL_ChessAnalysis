@@ -36,11 +36,11 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="/">Accueil</a></li>
-            <li class="dropdown">
+            <li class="dropdown active">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Analyser <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="/games/2">Démonstration</a></li>
-                <li><a href="#">Classement des parties</a></li>
+                <li><a href="/games">Classement des parties</a></li>
                 <li><a href="#">Meilleurs joueurs</a></li>
                 <li role="separator" class="divider"></li>
                 <li class="dropdown-header">Mauvais joueurs</li>
@@ -51,7 +51,7 @@
             <li><a href="/contact">Contact</a></li>
             <li><a href="/about">À propos</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
@@ -59,8 +59,7 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Démonstration</h1>
-        <p>Plateau Partie d'échec</p>
+        <h2 id="title-game"></h2>
 		<div class="row-fluid">
 			<div id="infos">
 				<div id="depths">
@@ -120,7 +119,7 @@
 
 
 
-		<script type="text/javascript" src="/static/js/jquery.js" ></script>
+		<script type="text/javascript" src="/static/js/jquery.min.js" ></script>
 		<script type="text/javascript" src="/static/js/chessboard-0.3.0.min.js" ></script>
 		<script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
 		<script type="text/javascript" src="/static/js/highcharts.js"></script>

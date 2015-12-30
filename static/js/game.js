@@ -49,13 +49,13 @@
         }
         $("#depths .dropdown-menu").append(listDepths);
 
-        $("#infos #players table").append('<tr><td>Nom<br/>Classement ELO</td><td>' + game.players.white.name + '<br/>' + game.players.white.elo +
+        $("#infos #players table").append('<tr><td>Nom<br/>ELO</td><td>' + game.players.white.name + '<br/>' + game.players.white.elo +
                     '</td><td><i class="icon icon-adjust"></i></td><td>' + game.players.black.name + '<br/>' + game.players.black.elo + '</td></tr>');
         $("#infos #ev table").append('<tr><td>Nom</td><td>'+ game.event.name + '</td></tr>' +
             '<tr><td>Ville</td><td>'+ game.event.city + '</td></tr>' +
             '<tr><td>Date</td><td>'+ game.event.date + '</td></tr>'
         );
-
+        $("#title-game").append(game.players.white.name + " contre " + game.players.black.name);
         var options = {
             chart: {
                 type: 'area',

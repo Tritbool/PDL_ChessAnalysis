@@ -5,9 +5,10 @@
 */
 
 var promise = require('es6-promise').Promise
-    , mysql = require('mysql')
     , Chess = require('chess.js').Chess
+    , mysql = require('mysql')
     ;
+
 
 var createConnection = function(host, user, password, database) {
     var connection = mysql.createConnection(
@@ -17,6 +18,7 @@ var createConnection = function(host, user, password, database) {
             , password              : password
             , database              : database
             , multipleStatements    : true
+            , dateStrings           : true
         }
     );
     return new Promise(function(resolve,reject){
@@ -40,13 +42,13 @@ var request = function(connection, query){
     });
 };
 
-var end = function(connection){
+var endConnection = function(connection){
     return new Promise(function(resolve, reject) {
         connection.end(function(err){
             if (err){
                 reject(err);
             }
-            resolve("connection closed on " + connection.config.host + ":" + connection.config.port);
+            resolve("connection closed on port " + connection.config.port);
         });
     });
 };
@@ -72,8 +74,44 @@ var getGame = function(connection, idGame){
     });
 };
 
+var getPartialGame = function(connection, idGame){
+  return new Promise(function(resolve, reject) {
+      request(connection,
+              // get all moves, fens and logs of a game
+              "Select f.log"
+              + " from move m, fen f"
+              + " where m.idfen=f.id and m.idGame = " + idGame + ";"
+              // get meta-data of a game
+              + " Select e.name as eventName, e.city as eventCity, white.name as whiteName, black.name as blackName, g.date"
+              + " from game g, player white, player black, event e"
+              + " where white.id=g.whiteId and black.id=g.blackId and e.id=g.eventId and g.id=" + idGame +";")
+          .then(function(results){
+              resolve(results);
+          })
+          .catch(function(error){
+              reject(error);
+          })
+      ;
+  });
+};
+
+var getIdGames = function(connection){
+    return new Promise(function(resolve, reject) {
+        request(connection, "Select g.id from game g;")
+            .then(function(results){
+                resolve(results);
+            })
+            .catch(function(error){
+                reject(error);
+            })
+        ;
+    });
+};
+
 module.exports = {
     createConnection    : createConnection
-    , end               : end
+    , endConnection     : endConnection
     , getGame           : getGame
+    , getPartialGame    : getPartialGame
+    , getIdGames        : getIdGames
 };

@@ -45,6 +45,28 @@ a:focus, a:hover {
 .jumbotron a {
     color : #333333;
 }
+/*--------------------------------
+    LIST GAME PART
+---------------------------------*/
+
+#container-list-games {
+    margin-top : 30px;
+}
+#list-games tbody tr {
+    height: 60px;
+    border: 1px solid #B58863;
+}
+#list-games tbody tr td{
+}
+#list-games tbody tr td:first-child{
+    background-color: #F0D9B5;
+}
+#list-games tbody tr:not(:first-child) td{
+    border-top: 1px solid #B58863;
+}
+#list-games tbody tr td {
+    line-height: 20px;
+}
 
 /*--------------------------------
     CHESS PART
@@ -79,40 +101,32 @@ a:focus, a:hover {
     text-align: center;
 }
 #players table, #ev table{
-    border: 1px solid #B58863 !important;
-    border-top: 1px solid #B58863 !important;
+    border: 1px solid #B58863;
 }
 #players table tr td, #ev table tr td{
     text-align: center;
     vertical-align: middle;
 }
-#players table td:first-child{
-    min-width:130px;
+#players table td:first-child, #ev table td:first-child{
+    width:80px;
     background-color: #F0D9B5;
 }
-#players table td:not(:nth-last-child(2) :first-child){
-    min-width:100px;
+#players table td:not(:nth-last-child(2) :first-child), #ev table td:not(:first-child){
+    width:150px;
 }
-#ev table td:first-child{
-    width: 50px;
-    background-color: #F0D9B5;
+#ev tbody tr td, #players table tr td, .mytable table tr td{
+    border-top: 1px solid #B58863;
 }
-#ev table td:not(:first-child){
-    width: 100px;
-}
-/*#depths {
-    margin-top: 30px;
-    display: inline-block;
-    vertical-align: middle;
-    text-align: center;
-}*/
 #depths ul{
     text-align: center;
 }
 #depths .caret{
     margin-top: 0px;
 }
-table tr td{
+.mytable tr td{
+    height: 10px;
+}
+/*table tr td{
     line-height: 10px;
     border-color: 1px solid #B58863;
     -webkit-touch-callout: none;
@@ -121,7 +135,7 @@ table tr td{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
+}*/
 .mytable table tr td:first-child {
     width: 15px;
     background-color: #F0D9B5;
@@ -140,7 +154,6 @@ table tr td{
     margin-left: -4px;
     background-color: #F0D9B5;
     border-color:  #B58863;
-    /*border: 1px solid;*/
 }
 
 /*--------------------------------

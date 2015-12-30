@@ -10,6 +10,7 @@
     <link rel="icon" href="../../favicon.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="/static/css/theme.css">
 
     <title>The analyser</title>
@@ -43,7 +44,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="/">Accueil</a></li>
-            <li class="dropdown">
+            <li class="dropdown active">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Analyser <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="/games/2">Démonstration</a></li>
@@ -55,7 +56,7 @@
                 <li><a href="#">Critères d'analyse</a></li>
               </ul>
             </li>
-            <li class="active"><a href="/contact">Contact</a></li>
+            <li><a href="/contact">Contact</a></li>
             <li><a href="/about">À propos</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -64,31 +65,53 @@
 
     <div class="container theme-showcase" role="main">
 
-      <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Contact</h1>
-        <p> Si vous avez une question à propos du projet vous pouvez nous contacter ici :
-            <br>
-            <div class="text-center">contact@theChessAnalyzer.com</div>
-          </p>
-        <p>
-            Les sources sont disponibles sur github à cette adresse : <a href="https://github.com/Tritbool/PDL_ChessAnalysis">https://github.com/Tritbool/PDL_ChessAnalysis</a>
-        </p>
-      </div>
 
-      <div class="mastfoot">
-            <div class="row">
-                <div class="col-md-12 text-center"><a href="/about">Qui sommes nous?</a></div>
+        <div class="jumbotron">
+            <h1>Liste des parties</h1>
+            <div id="container-list-games">
+                <table id="list-games" class="display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Score</th>
+                            <th>Joueur Blanc</th>
+                            <th>Joueur Noir</th>
+                            <th>Date</th>
+                            <th>Evènement</th>
+                            <th>Ville</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>#</th>
+                            <th>Score</th>
+                            <th>Joueur Blanc</th>
+                            <th>Joueur Noir</th>
+                            <th>Date</th>
+                            <th>Evènement</th>
+                            <th>Ville</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-          </div>
+        </div>
 
-    </div> <!-- /container -->
+    </div>
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.min.js" ></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
+    <script type="text/javascript" src="/static/js/jquery.dataTables.min.js" ></script>
+    <script type="text/javascript" src="/static/js/games.js"></script>
+    <script>
+        $(document).ready(function() {
+            var games = [<% for(var i in games) { %>
+                    [<%= games[i].id %>, <%= games[i].score %>, '<%= games[i].players.white %>', '<%= games[i].players.black %>', '<%= games[i].event.date %>', '<%= games[i].event.name %>', '<%= games[i].event.city %>'],
+                <% } %>
+            ];
+            $(document).myPlugin({games:games});
+        });
+    </script>
   </body>
 </html>
