@@ -6,15 +6,21 @@
 
 (function($) {
     $.fn.myPlugin = function(data) {
-        var dataSet = data.games;
         $(document).ready(function() {
             var table = $('#list-games').DataTable( {
                 order           : [[ 1, "desc" ]]
-                , data          : dataSet
+                , data          : data.games
                 , scrollY       : '50vh'
                 , scrollCollapse: true
                 , lengthMenu    : [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]]
                 , pagingType    : "full_numbers"
+                , iDisplayLength: 25
+                , columnDefs    : [
+                    {
+                        className   : "dt-center"
+                        , targets   : [0,1,2,3,4,5,6]
+                    }
+                ]
                 , language      : {
                     url             : "/static/json/dataTable.french.json"
                 }
@@ -26,13 +32,9 @@
                     $('#list-games tbody tr').hover(function(){
                         $(this).css("font-weight","bold");
                         $(this).css('cursor', 'pointer');
-                        $(this).css("color","#755F4E");
-                        $(this).css('background-color', '#F0D9B5');
                     }, function() {
                         $(this).css("font-weight","normal");
                         $(this).css('cursor','auto');
-                        $(this).css("color","black");
-                        $(this).css('background-color', '');
                     });
                 }
             });

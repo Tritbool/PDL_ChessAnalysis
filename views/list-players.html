@@ -65,29 +65,21 @@
 
 
         <div class="jumbotron">
-            <h1>Classement des parties</h1>
+            <h1>Classement ELO des joueurs</h1>
             <div id="container-list-games">
-                <table id="list-games" class="display" width="100%">
+                <table id="list-games" class="display dt-head-center dt-body-center" width="100%">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Score</th>
-                            <th>Joueur Blanc</th>
-                            <th>Joueur Noir</th>
-                            <th>Date</th>
-                            <th>Evènement</th>
-                            <th>Ville</th>
+                            <th>Nom</th>
+                            <th>Classement ELO</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>#</th>
-                            <th>Score</th>
-                            <th>Joueur Blanc</th>
-                            <th>Joueur Noir</th>
-                            <th>Date</th>
-                            <th>Evènement</th>
-                            <th>Ville</th>
+                            <th>Nom</th>
+                            <th>Classement ELO</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -101,14 +93,14 @@
     <script type="text/javascript" src="/static/js/jquery.min.js" ></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
     <script type="text/javascript" src="/static/js/jquery.dataTables.min.js" ></script>
-    <script type="text/javascript" src="/static/js/games.js"></script>
+    <script type="text/javascript" src="/static/js/players.js"></script>
     <script>
         $(document).ready(function() {
-            var games = [<% for(var i in games) { %>
-                    [<%= games[i].id %>, <%= games[i].score %>, '<%= games[i].players.white %>', '<%= games[i].players.black %>', '<%= games[i].event.date %>', '<%= games[i].event.name %>', '<%= games[i].event.city %>'],
+            var players = [<% for(var i in players) { %>
+                    [<%= players[i].id %>, "<%= players[i].name %>", <%= players[i].elo %>],
                 <% } %>
             ];
-            $(document).myPlugin({games:games});
+            $(document).myPlugin({players:players});
         });
     </script>
   </body>

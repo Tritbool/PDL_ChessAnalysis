@@ -68,6 +68,14 @@ getDatabaseOptions()
             .then(function(co){
                 connection = co;
                 console.log("connection to database on port " + connection.config.port + " succeed");
+                // parse.getDataPlayers(connection)
+                // .then(function(data){
+                //     // console.log(data.rows);
+                // })
+                // .catch(function(error){
+                //     console.log(error);
+                // })
+                // ;
             })
             .catch(function(error){
                 console.log(error);
@@ -84,6 +92,7 @@ getDatabaseOptions()
         process.exit(1);
     })
 ;
+
 
 app.engine('html', cons.lodash);
 app.set('view engine', 'html');
@@ -112,6 +121,16 @@ app.get('/games/:id', function (req, res) {
         })
     ;
 });
+app.get('/players', function(req, res){
+    parse.getDataPlayers(connection)
+        .then(function(data){
+            res.render('list-players.html', data);
+        })
+        .catch(function(error){
+            console.log(error);
+        })
+    ;
+});
 app.get('/about', function(req,res){
     res.render('about.html');
 });
@@ -120,27 +139,13 @@ app.get('/contact', function(req,res){
 });
 
 process.on('SIGINT', function() {
-    shuttingDown = true;
-    // var port = listener.address().port;
-    // listener.close(function(){
-    //     console.log("server closed on port " + port);
-    //     database.endConnection(connection)
-    //         .then(function(properDisconnection){
-    //             console.log(properDisconnection);
-    //             process.exit(0);
-    //         })
-    //         .catch(function(error){
-    //             console.log(error);
-    //             process.exit(1);
-    //         })
-    //     ;
-    // });
+    // shuttingDown = true;
     database.endConnection(connection)
         .then(function(properDisconnection){
             console.log(properDisconnection);
-            // var port = listener.address().port;
+            var port = listener.address().port;
             listener.close(function(){
-                // console.log("server closed on port " + port);
+                console.log("server closed on port " + port);
                 process.exit(0);
             });
         })

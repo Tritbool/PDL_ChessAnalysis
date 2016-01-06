@@ -108,10 +108,26 @@ var getIdGames = function(connection){
     });
 };
 
+var getPlayers = function(connection){
+    return new Promise(function(resolve, reject) {
+        request(connection, "Select p.name, p.id from player p;"
+                + "Select g.whiteId as id, g.whiteElo as elo from game g;"
+                + "Select g.blackId as id, g.blackElo as elo from game g;")
+            .then(function(results){
+                resolve(results);
+            })
+            .catch(function(error){
+                reject(error);
+            })
+        ;
+    });
+};
+
 module.exports = {
     createConnection    : createConnection
     , endConnection     : endConnection
     , getGame           : getGame
     , getPartialGame    : getPartialGame
     , getIdGames        : getIdGames
+    , getPlayers        : getPlayers
 };

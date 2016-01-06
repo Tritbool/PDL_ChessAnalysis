@@ -51,23 +51,12 @@ a:focus, a:hover {
 
 #container-list-games {
     margin-top : 30px;
+    /*text-align: center;*/
 }
-#list-games tbody tr {
-    height: 60px;
-    border: 1px solid #B58863;
-}
-#list-games tbody tr td{
-}
-#list-games tbody tr td:first-child{
-    background-color: #F0D9B5;
-}
-#list-games tbody tr:not(:first-child) td{
-    border-top: 1px solid #B58863;
-}
-#list-games tbody tr td {
-    line-height: 20px;
-}
-
+#list-games tr.odd { background-color: #F0D9B5; }
+#list-games tr.even { background-color: #f4e4ca; }
+#list-games tr.odd .sorting_1, #list-games tr.odd .sorting_2, #list-games tr.odd .sorting_3 { background-color: #eccea0; }
+#list-games tr.even .sorting_1, #list-games tr.even .sorting_2, #list-games tr.even .sorting_3 { background-color: #F0D9B5; }
 /*--------------------------------
     CHESS PART
 ---------------------------------*/
