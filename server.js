@@ -68,14 +68,6 @@ getDatabaseOptions()
             .then(function(co){
                 connection = co;
                 console.log("connection to database on port " + connection.config.port + " succeed");
-                // parse.getDataPlayers(connection)
-                // .then(function(data){
-                //     // console.log(data.rows);
-                // })
-                // .catch(function(error){
-                //     console.log(error);
-                // })
-                // ;
             })
             .catch(function(error){
                 console.log(error);

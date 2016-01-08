@@ -17,45 +17,86 @@
         var table = "";
         for (var i in moves) {
             fens.push(moves[i].fen);
-            serie.push(moves[i].depths[depth]);
+            serie.push(moves[i].depths[moves[i].depths.length - 1]);
             categories.push(moves[i].position);
-            if (i%2 === 0){
-                if (moves[i].depths[depth] * -1 > 0) {
-                    table += '<tr><td>' + i/2 + '</td><td id="pos' + i + '">' + moves[i].position + '<p>+' +  moves[i].depths[depth] * -1 + '</p></td>';
-                }
-                else{
-                    table += '<tr><td>' + i/2 + '</td><td id="pos' + i + '">' + moves[i].position + '<p>' +  moves[i].depths[depth] * -1 + '</p></td>';
-                }
-            }
-            else{
-                if (moves[i].depths[depth] > 0) {
-                    table += '<td id="pos' + i + '">' + moves[i].position + '<p>+' +  moves[i].depths[depth] + '</p></td></tr>';
-                }
-                else{
-                    table += '<td id="pos' + i + '">' + moves[i].position + '<p>' +  moves[i].depths[depth] + '</p></td></tr>';
-                }
-            }
         }
+
+        $('#bestmove button').attr('disabled', true);
+
+        var generateMovesTable = function(depth){
+            var table = "";
+            for (var i in moves) {
+                var ind;
+                if (depth == "max"){
+                    ind = moves[i].depths.length - 1;
+                }
+                else{
+                    ind = parseInt(depth);
+                }
+                if (i%2 === 0){
+                    if (moves[i].depths[ind] * -1 > 0) {
+                        table += '<tr><td>' + i/2 + '</td><td id="pos' + i + '">' + moves[i].position + '<p>+' +  moves[i].depths[ind] * -1 + '</p></td>';
+                    }
+                    else{
+                        table += '<tr><td>' + i/2 + '</td><td id="pos' + i + '">' + moves[i].position + '<p>' +  moves[i].depths[ind] * -1 + '</p></td>';
+                    }
+                }
+                else{
+                    if (moves[i].depths[ind] > 0) {
+                        table += '<td id="pos' + i + '">' + moves[i].position + '<p>+' +  moves[i].depths[ind] + '</p></td></tr>';
+                    }
+                    else{
+                        table += '<td id="pos' + i + '">' + moves[i].position + '<p>' +  moves[i].depths[ind] + '</p></td></tr>';
+                    }
+                }
+            }
+            moveTable.find($("table")).html(table);
+
+            moveTable.find($("td")).click(function(){
+                moveChange($(this).attr('id').substr(3));
+                if (chart.series[0].points[pos].selected === false){
+                    chart.series[0].points[pos].select();
+                }
+            });
+
+            moveTable.find($("td:last-child, td:nth-last-child(2)")).hover(function(){
+                $(this).css('cursor', 'pointer');
+                if ($(this).css('background-color') == "rgb(249, 249, 249)" || $(this).css('background-color') == "transparent"){
+                    $(this).css('background-color', '#F0D9B5');
+                }
+            }, function() {
+                $(this).css('cursor','auto');
+                if ($(this).css('background-color') != "rgb(195, 159, 130)"){
+                    $(this).css('background-color', '');
+                }
+            });
+        };
+        generateMovesTable("max");
+
+
         var board = ChessBoard('chessboard', {
             pieceTheme	: '/static/img/chesspieces/{piece}.png'
             , position	: 'start'
             , draggable	: false
             , showErrors : 'console'
         });
-        moveTable.find($("table")).append(table);
+
         var listDepths = "";
-        for (var j in moves[0].depths) {
+        for (var j = 0; j < depth; j++) {
             listDepths += '<li id="depth' + j + '"><a>' + j + '</a></li>';
         }
-        $("#depths .dropdown-menu").append(listDepths);
+        $("#depths .dropdown-menu").append(listDepths + '<li id="depthmax"><a>max</a></li>');
 
-        $("#infos #players table").append('<tr><td>Nom<br/>ELO</td><td>' + game.players.white.name + '<br/>' + game.players.white.elo +
-                    '</td><td><i class="icon icon-adjust"></i></td><td>' + game.players.black.name + '<br/>' + game.players.black.elo + '</td></tr>');
+        $("#infos #players table").append('<tr><td>Nom</td><td>' + game.players.white.name + '</td>'
+                    + '<td><i class="icon icon-adjust"></i></td><td>' + game.players.black.name + '</td></tr>'
+                    + '<tr><td>ELO</td><td>' + game.players.white.elo + '</td><td></td><td>' + game.players.black.elo + '</td></tr>');
         $("#infos #ev table").append('<tr><td>Nom</td><td>'+ game.event.name + '</td></tr>' +
             '<tr><td>Ville</td><td>'+ game.event.city + '</td></tr>' +
             '<tr><td>Date</td><td>'+ game.event.date + '</td></tr>'
         );
         $("#title-game").append(game.players.white.name + " contre " + game.players.black.name);
+
+
         var options = {
             chart: {
                 type: 'area',
@@ -110,13 +151,33 @@
         var chart = new Highcharts.Chart(options);
 
         $('#depths li').on('click', function(){
-            depth = parseInt($(this).attr('id').substr(5));
             serie = [];
-            for (var i in moves){
-                serie.push(moves[i].depths[depth]);
+            if ($(this).attr('id') != "depthmax"){
+                depth = parseInt($(this).attr('id').substr(5));
+                for (var i in moves){
+                    serie.push(moves[i].depths[depth]);
+                }
             }
+            else{
+                for (var j in moves){
+                    serie.push(moves[j].depths[moves[j].depths.length - 1]);
+                }
+            }
+            $('#depths button').html("Profondeur d'analyse : " + $(this).attr('id').substr(5) + " <span class=\"caret\"></span>");
+            generateMovesTable($(this).attr('id').substr(5));
             options.series[0].data = serie;
             chart = new Highcharts.Chart(options);
+        });
+
+        $('#bestmove button').on('click', function(){
+            if (pos > -1 && pos < moves.length){
+                board.move(moves[pos].best);
+                $(this).html(moves[pos].best);
+                setTimeout(function(){
+                    board.position(fens[pos]);
+                    $('#bestmove button').html("Meilleur Coup");
+                }, 700);
+            }
         });
 
         var moveChange = function(id){
@@ -128,6 +189,12 @@
             }
             pos = parseInt(id);
             if (pos >= 0 && pos < fens.length){
+                if (moves[pos].best === ""){
+                    $('#bestmove button').attr('disabled', true);
+                }
+                else{
+                    $('#bestmove button').attr('disabled', false);
+                }
                 moveTable.scrollTop(0);
                 var actTd = moveTable.find($("#pos" + pos));
                 board.position(fens[pos]);
@@ -183,25 +250,6 @@
             }
             if ($(this).attr("id") == "end"){
                 stepEnd();
-            }
-        });
-
-        moveTable.find($("td")).click(function(){
-            moveChange($(this).attr('id').substr(3));
-            if (chart.series[0].points[pos].selected === false){
-                chart.series[0].points[pos].select();
-            }
-        });
-
-        moveTable.find($("td:last-child, td:nth-last-child(2)")).hover(function(){
-            $(this).css('cursor', 'pointer');
-            if ($(this).css('background-color') == "rgb(249, 249, 249)" || $(this).css('background-color') == "transparent"){
-                $(this).css('background-color', '#F0D9B5');
-            }
-        }, function() {
-            $(this).css('cursor','auto');
-            if ($(this).css('background-color') != "rgb(195, 159, 130)"){
-                $(this).css('background-color', '');
             }
         });
     };

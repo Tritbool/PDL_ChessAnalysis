@@ -16,12 +16,13 @@ var getDataGame = function(idGame, connection){
             var maxDepth = 100;
             results.rows[0] = _.forEach(results.rows[0], function(move){
                 parseLog(move.log)
-                .then(function(depths){
-                    if (depths.length < maxDepth){
-                        maxDepth = depths.length;
+                .then(function(parsedLog){
+                    if (parsedLog.depths.length < maxDepth){
+                        maxDepth = parsedLog.depths.length;
                     }
                     move.maxDepth = maxDepth;
-                    move.depths = depths;
+                    move.depths = parsedLog.depths;
+                    move.best = _.trim(parsedLog.bestmove);
                 })
                 .catch(function(error){
                     move.maxDepth = maxDepth;
@@ -32,36 +33,39 @@ var getDataGame = function(idGame, connection){
             return results;
         })
         .then(function(results){
-            var maxDepth = results.rows[0][results.rows[0].length - 1].maxDepth;
             var data = {};
+            data.maxDepth = _.min(results.rows[0], function(o){
+                return o.maxDepth;
+            }).maxDepth;
             data.moves = _.map(results.rows[0], function(move){
                 return {
-                    num : move.halfMove
-                    , position : move.move
-                    , fen : move.idFen
-                    , depths : _.slice(move.depths, 0, maxDepth)
+                    position    : move.move
+                    , depths    : move.depths
+                    , best      : (move.best !== undefined && move.best.match(/\w\d\w\d*/)) ? move.best.substr(0,2) + "-" + move.best.substr(2,2) : ""
+                    , num       : move.halfMove
+                    , fen       : move.idFen
                 };
             });
             data.game = {
                 event : {
-                    name    : results.rows[1][0].eventName.replace(/\'/g,'\\\'')
-                    , city  : results.rows[1][0].eventCity.replace(/\'/g,'\\\'')
-                    , date  : results.rows[1][0].date.replace(/-/g,'/')
+                    name    : (results.rows[1][0].eventName !== undefined) ? results.rows[1][0].eventName.replace(/\'/g,'\\\'') : ""
+                    , city  : (results.rows[1][0].eventCity !== undefined) ? results.rows[1][0].eventCity.replace(/\'/g,'\\\'') : ""
+                    , date  : (results.rows[1][0].date !== undefined) ? results.rows[1][0].date.replace(/\'/g,'\\\'') : ""
                 }
                 , players : {
                     white : {
-                        name    : results.rows[1][0].whiteName.replace(/\'/g,'\\\'')
-                        , elo   : results.rows[1][0].whiteElo
+                        name    : (results.rows[1][0].whiteName !== undefined) ? results.rows[1][0].whiteName.replace(/\'/g,'\\\'') : ""
+                        , elo    : (results.rows[1][0].whiteElo !== undefined) ? results.rows[1][0].whiteElo : 0
                     }
                     , black : {
-                        name    : results.rows[1][0].blackName.replace(/\'/g,'\\\'')
-                        , elo   : results.rows[1][0].blackElo
+                        name    : (results.rows[1][0].blackName !== undefined) ? results.rows[1][0].blackName.replace(/\'/g,'\\\'') : ""
+                        , elo    : (results.rows[1][0].blackElo !== undefined) ? results.rows[1][0].blackElo : 0
                     }
                 }
                 , opening : {
-                    name        : results.rows[1][0].opening.replace(/\'/g,'\\\'').replace(/ /g,'<br/>')
-                    , variation : results.rows[1][0].variation.replace(/\'/g,'\\\'').replace(/ /g,'<br/>')
-                    , length    : results.rows[1][0].nbMoves
+                    variation   : (results.rows[1][0].variation !== undefined) ? results.rows[1][0].variation.replace(/\'/g,'\\\'').replace(/ /g,'<br/>') : ""
+                    , name      : (results.rows[1][0].opening !== undefined) ? results.rows[1][0].opening.replace(/\'/g,'\\\'').replace(/ /g,'<br/>') : ""
+                    , length    : (results.rows[1][0].nbMoves !== undefined) ? results.rows[1][0].nbMoves : 0
                 }
             };
             resolve(data);
@@ -76,6 +80,7 @@ var getDataGame = function(idGame, connection){
 var parseLog = function(log){
     return new Promise(function(resolve, reject) {
         var scoreDepths = [];
+        var bestmove = log.split("bestmove")[1].split("ponder")[0];
         if (log !== null && log.search("info depth") > -1){
             var depths = log.split("info depth");
             var length = 0;
@@ -90,7 +95,7 @@ var parseLog = function(log){
                   scoreDepths.push(0);
                 }
             }
-            resolve(scoreDepths);
+            resolve({depths:scoreDepths, bestmove:bestmove});
         }
         else{
             reject();
@@ -128,9 +133,9 @@ var getPartialDataGame = function(idGame, connection){
                     white   :  results[1][0].whiteName.replace(/\'/g,'\\\'')
                     , black :  results[1][0].blackName.replace(/\'/g,'\\\'')
                 }
-                , score : _.sum(results[0], function(o) {
+                , score : Math.round((_.sum(results[0], function(o) {
                     return o.score;
-                })
+                }))/results[0].length)
             };
             resolve(data);
         })

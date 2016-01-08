@@ -84,7 +84,7 @@ a:focus, a:hover {
     display: inline-block;
     vertical-align: middle;
 }
-#players, #ev, #depths{
+#players, #ev, #depths, #bestmove{
     margin: 10px;
     max-width:300px;
     text-align: center;
@@ -106,11 +106,22 @@ a:focus, a:hover {
 #ev tbody tr td, #players table tr td, .mytable table tr td{
     border-top: 1px solid #B58863;
 }
+#players tr td:nth-last-child(2) {
+    border: none;
+}
+#players tr:first-child td:nth-last-child(2) i {
+    position: absolute;
+    margin-top: 11px;
+    margin-left: -7px;
+}
 #depths ul{
     text-align: center;
 }
 #depths .caret{
     margin-top: 0px;
+}
+#bestmove {
+    text-align: center;
 }
 .mytable tr td{
     height: 10px;

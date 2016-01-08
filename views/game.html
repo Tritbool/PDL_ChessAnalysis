@@ -62,10 +62,13 @@
 			<div id="infos">
 				<div id="depths">
 					<div class="btn-group">
-					   <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Profondeur d'analyse <span class="caret"></span></button>
-					   <ul class="dropdown-menu">
-					   </ul>
-				   </div>
+						<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Profondeur d'analyse : max <span class="caret"></span></button>
+						<ul class="dropdown-menu">
+						</ul>
+					</div>
+				</div>
+				<div id="bestmove">
+					<button type="button" class="btn btn-default">Meilleur Coup</button>
 				</div>
 				<div id="ev">
 					<h3>Event</h3>
@@ -124,13 +127,14 @@
 		<script type="text/javascript" src="/static/js/game.js"></script>
 		<script>
 			$(document).ready(function() {
-				var depth = <%= moves[0].depths.length %> - 1;
+				var depth = <%= maxDepth %>;
 				var moves = [<% for(var i in moves) { %>
 					{
 						num : <%= moves[i].num %>
 						, position : '<%= moves[i].position %>'
 						, fen : '<%= moves[i].fen %>'
 						, depths : [<% for(var j in moves[i].depths) { %> <%= moves[i].depths[j] %>,<% } %>]
+						, best : '<%= moves[i].best %>'
 					},<% } %>
 				];
 				var game = {
