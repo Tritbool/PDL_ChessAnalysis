@@ -34,20 +34,20 @@
                     <li><a href="/">Accueil</a></li>
                     <li><a href="/games">Parties</a></li>
                     <li><a href="/players">Joueurs</a></li>
-                    <li><a href="/import">Importer un PGN</a></li>
+                    <li class="active"><a href="/import">Importer un PGN</a></li>
                     <li><a href="/contact">Contact</a></li>
-                    <li class="active"><a href="/about">À propos </a> </li>
+                    <li><a href="/about">À propos </a> </li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container theme-showcase" role="main">
         <div class="jumbotron">
-            <h1>À propos</h1>
-            <p> The Analyser est une interface permettant de visualiser l’évolution d’une partie d'échec.
-                <br>
-                Cette application a été réalisée par 5 étudiants de l'ISTIC dans le cadre de leur projet de PDL.
-            </p>
+            <h2>Importer un PGN</h2>
+            <div class="container-textarea">
+                <textarea name="" id="txt" cols="30" rows="10"></textarea>
+                <button class="btn btn-primary">Submit</button>
+            </div>
         </div>
         <div class="mastfoot">
             <div class="row">
@@ -57,5 +57,8 @@
     </div>
     <script type="text/javascript" src="/static/js/jquery.min.js" ></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
+    <script type="text/javascript" src="/static/js/lodash.min.js"></script>
+    <script type="text/javascript" src="/static/js/chesslib.js"></script>
+    <script type="text/javascript" src="/static/js/import.js"></script>
 </body>
 </html>

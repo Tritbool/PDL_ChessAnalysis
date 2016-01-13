@@ -7,7 +7,7 @@
 	<title>The Chess Analyser</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="/static/img/logo.ico">
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css" media="all">
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/static/css/chessboard-0.3.0.min.css" media="all">
 	<link rel="stylesheet" href="/static/css/theme.css">
 	<!--[if lt IE 9]>
@@ -45,16 +45,6 @@
 			<h2 id="title-game"></h2>
 			<div class="row-fluid">
 				<div id="infos">
-					<div id="depths">
-						<div class="btn-group">
-							<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Profondeur d'analyse : max <span class="caret"></span></button>
-							<ul class="dropdown-menu">
-							</ul>
-						</div>
-					</div>
-					<div id="bestmove">
-						<button type="button" class="btn btn-default">Meilleur Coup</button>
-					</div>
 					<div id="ev">
 						<h3>Event</h3>
 						<table class="table table-striped">
@@ -80,8 +70,6 @@
 					</div>
 				</div>
 			</div>
-			<div id="area">
-			</div>
 		</div>
 		<div class="mastfoot">
 			<div class="row">
@@ -93,22 +81,18 @@
 	<script type="text/javascript" src="/static/js/chessboard-0.3.0.min.js" ></script>
 	<script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
 	<script type="text/javascript" src="/static/js/highcharts.js"></script>
-	<script type="text/javascript" src="/static/js/game.js"></script>
+	<script type="text/javascript" src="/static/js/game-import.js"></script>
 	<script>
 	$(document).ready(function() {
-		var depth = <%= maxDepth %>;
 		var moves = [<% for(var i in moves) { %>
 			{
 				num : <%= moves[i].num %>
 				, position : '<%= moves[i].position %>'
 				, fen : '<%= moves[i].fen %>'
-				, depths : [<% for(var j in moves[i].depths) { %> <%= moves[i].depths[j] %>,<% } %>]
-				, best : '<%= moves[i].best %>'
 			},<% } %>
 		];
 		var game = {
-			id : <%= game.id %>
-			, result : <%= game.result %>
+			result : <%= game.result %>
 			, event : {
 				name    : '<%= game.event.name %>'
 				, city  : '<%= game.event.city %>'
@@ -117,20 +101,13 @@
 			, players : {
 				white : {
 					name    : '<%= game.players.white.name %>'
-					, elo   : <%= game.players.white.elo %>
 				}
 				, black : {
 					name    : '<%= game.players.black.name %>'
-					, elo   : <%= game.players.black.elo %>
 				}
 			}
-			, opening : {
-				name        : '<%= game.opening.name %>'
-				, variation : '<%= game.opening.variation %>'
-				, length    : <%= game.opening.length %>
-			}
 		};
-		$(document).myPlugin({depth: depth, game:game, moves: moves});
+		$(document).myPlugin({game:game, moves: moves});
 	});
 	</script>
 </body>

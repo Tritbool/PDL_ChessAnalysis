@@ -1,10 +1,10 @@
 /*--------------------------------
-    BODY
+BODY
 ---------------------------------*/
 body {
-  padding-top: 70px;
-  padding-bottom: 30px;
-  background-color: #546474;
+    padding-top: 70px;
+    padding-bottom: 30px;
+    background-color: #546474;
 }
 
 a {
@@ -17,7 +17,7 @@ a:focus, a:hover {
 }
 
 /*--------------------------------
-    NAVBAR
+NAVBAR
 ---------------------------------*/
 .navbar-inverse {
     background-color: #2E3E4E;
@@ -35,18 +35,23 @@ a:focus, a:hover {
 }
 
 /*--------------------------------
-    JUMBOTRON
+JUMBOTRON
 ---------------------------------*/
 .jumbotron {
-    padding-top: 20px;
+    padding-top: 10px;
     padding-bottom: 20px;
 }
 
 .jumbotron a {
     color : #333333;
 }
+
+.row-fluid{
+    margin-top: -10px;
+    padding-top: 0px;
+}
 /*--------------------------------
-    LIST GAME PART
+LIST GAME PART
 ---------------------------------*/
 
 #container-list-games {
@@ -58,31 +63,26 @@ a:focus, a:hover {
 #list-games tr.odd .sorting_1, #list-games tr.odd .sorting_2, #list-games tr.odd .sorting_3 { background-color: #eccea0; }
 #list-games tr.even .sorting_1, #list-games tr.even .sorting_2, #list-games tr.even .sorting_3 { background-color: #F0D9B5; }
 /*--------------------------------
-    CHESS PART
+CHESS PART
 ---------------------------------*/
+#chessboard, #moves, #infos{
+    display: inline-block;
+    vertical-align: middle;
+    margin : 10px;
+}
 #chessboard {
     width: 400px;
-    /*float: left;*/
-    display: inline-block;
-    margin: 10px;
-    vertical-align: middle;
 }
 #moves {
-    width: 250px;
-    vertical-align: middle;
-    display: inline-block;
-    margin: 10px;
-    padding: 10px;
+    width: 220px;
+}
+#infos{
+    width: 300px;
 }
 .mytable {
     height: 360px !important;
     overflow-y: scroll;
     border: 1px solid #B58863;
-    border-top: none;
-}
-#infos{
-    display: inline-block;
-    vertical-align: middle;
 }
 #players, #ev, #depths, #bestmove{
     margin: 10px;
@@ -106,14 +106,6 @@ a:focus, a:hover {
 #ev tbody tr td, #players table tr td, .mytable table tr td{
     border-top: 1px solid #B58863;
 }
-#players tr td:nth-last-child(2) {
-    border: none;
-}
-#players tr:first-child td:nth-last-child(2) i {
-    position: absolute;
-    margin-top: 11px;
-    margin-left: -7px;
-}
 #depths ul{
     text-align: center;
 }
@@ -123,19 +115,27 @@ a:focus, a:hover {
 #bestmove {
     text-align: center;
 }
-.mytable tr td{
-    height: 10px;
-}
-/*table tr td{
-    line-height: 10px;
-    border-color: 1px solid #B58863;
+table tr td{
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}*/
+}
+table tr td:first-child{
+    font-weight: bold;
+}
+.mytable{
+    margin-top: 10px;
+}
+.mytable table tr:last-child {
+    border-top: 1px solid #B58863;
+    /*border-bottom: 1px solid #B58863;*/
+}
+.mytable table tr:last-child td {
+    border-bottom: 1px solid #B58863;
+}
 .mytable table tr td:first-child {
     width: 15px;
     background-color: #F0D9B5;
@@ -157,19 +157,39 @@ a:focus, a:hover {
 }
 
 /*--------------------------------
-    THEME
+THEME
 ---------------------------------*/
 
 .theme-dropdown .dropdown-menu {
-  position: static;
-  display: block;
-  margin-bottom: 20px;
+    position: static;
+    display: block;
+    margin-bottom: 20px;
 }
 
 .theme-showcase > p > .btn {
-  margin: 5px 0;
+    margin: 5px 0;
 }
 
 .theme-showcase .navbar .container {
-  width: auto;
+    width: auto;
+}
+
+/*--------------------------------
+IMPORT
+---------------------------------*/
+
+.container-textarea{
+    display:inline-block;
+    position:relative;
+}
+
+.container-textarea textarea{
+    width: 700px;
+    height: 400px;
+}
+
+.container-textarea button{
+    position:absolute;
+    bottom:10px;
+    right:10px;
 }

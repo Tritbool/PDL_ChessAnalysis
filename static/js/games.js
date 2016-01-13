@@ -1,7 +1,7 @@
 /* jshint
-    laxcomma:true
-    , laxbreak:true
-    , node:true
+laxcomma:true
+, laxbreak:true
+, node:true
 */
 
 (function($) {
@@ -35,6 +35,19 @@
                     }, function() {
                         $(this).css("font-weight","normal");
                         $(this).css('cursor','auto');
+                    });
+                    $('#list-games').find("tbody").find("tr").each(function(){
+                        var res = $(this).find(":last-child").text();
+                        if (res === "0"){
+                            $(this).find(":last-child").html(" 1 - 0 ");
+                        }
+                        else if (res === "1"){
+                            $(this).find(":last-child").html(" 0 - 1 ");
+                        }
+                        if (res === "2"){
+                            $(this).find(":last-child").html("1/2 - 1/2");
+                        }
+                        $(this).find(":last-child").css('text-align','center');
                     });
                 }
             });

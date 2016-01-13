@@ -1,21 +1,21 @@
 /* jshint
-    laxcomma:true
-    , laxbreak:true
-    , node:true
-    , loopfunc:true
+laxcomma:true
+, laxbreak:true
+, node:true
+, loopfunc:true
 */
 
 var promise     = require('es6-promise').Promise
-    , express   = require('express')
-    , _         = require('lodash')
-    , cons      = require('consolidate')
-    , prompt    = require('prompt')
-    , parse     = require('./parse')
-    , database  = require('./database')
-    , app       = express()
-    , connection
-    , listener
-    ;
+, express   = require('express')
+, _         = require('lodash')
+, cons      = require('consolidate')
+, prompt    = require('prompt')
+, parse     = require('./parse')
+, database  = require('./database')
+, app       = express()
+, connection
+, listener
+;
 
 var getDatabaseOptions = function() {
     return new Promise(function(resolve, reject) {
@@ -52,8 +52,8 @@ var getDatabaseOptions = function() {
             }
         ], function (err, results) {
             if (err){
-                 reject(err);
-             }
+                reject(err);
+            }
             resolve({host:results.host,login:results.login, pass:results.password, database:results.database});
         });
     });
@@ -63,26 +63,26 @@ prompt.delimiter = "> ".red;
 prompt.start();
 
 getDatabaseOptions()
-    .then(function(results){
-        database.createConnection(results.host, results.login, results.pass, results.database)
-            .then(function(co){
-                connection = co;
-                console.log("connection to database on port " + connection.config.port + " succeed");
-            })
-            .catch(function(error){
-                console.log(error);
-                process.exit(1);
-            })
-        ;
-        listener = app.listen(3000, function(){
-            console.log('Server running on port ' + listener.address().port);
-        });
-
+.then(function(results){
+    database.createConnection(results.host, results.login, results.pass, results.database)
+    .then(function(co){
+        connection = co;
+        console.log("connection to database on port " + connection.config.port + " succeed");
     })
     .catch(function(error){
         console.log(error);
         process.exit(1);
     })
+    ;
+    listener = app.listen(3000, function(){
+        console.log('Server running on port ' + listener.address().port);
+    });
+
+})
+.catch(function(error){
+    console.log(error);
+    process.exit(1);
+})
 ;
 
 
@@ -95,32 +95,50 @@ app.get('/', function(req,res){
 });
 app.get('/games', function (req, res) {
     parse.getAllDataGames(connection)
-        .then(function(data){
-            res.render('list-games.html',data);
-        })
-        .catch(function(error){
-            console.log(error);
-        })
+    .then(function(data){
+        res.render('list-games.html',data);
+    })
+    .catch(function(error){
+        console.log(error);
+    })
     ;
 });
 app.get('/games/:id', function (req, res) {
     parse.getDataGame(req.params.id, connection)
-        .then(function(data){
-            res.render('game.html',data);
-        })
-        .catch(function(error){
-            console.log(error);
-        })
+    .then(function(data){
+        res.render('game.html',data);
+    })
+    .catch(function(error){
+        console.log(error);
+    })
     ;
+});
+var content = '';
+app.post('/game-import', function(req, res){
+    content = '';
+    req.on('data', function (data) {
+        content += data;
+    });
+    req.on('end', function () {
+        var data =JSON.parse(content);
+        res.send({redirect:'/game-import', data:data});
+    });
+});
+app.get('/game-import', function(req, res){
+    var data = JSON.parse(content);
+    res.render('game-import.html', data);
+});
+app.get('/import', function(req, res){
+    res.render('import.html');
 });
 app.get('/players', function(req, res){
     parse.getDataPlayers(connection)
-        .then(function(data){
-            res.render('list-players.html', data);
-        })
-        .catch(function(error){
-            console.log(error);
-        })
+    .then(function(data){
+        res.render('list-players.html', data);
+    })
+    .catch(function(error){
+        console.log(error);
+    })
     ;
 });
 app.get('/about', function(req,res){
@@ -133,17 +151,17 @@ app.get('/contact', function(req,res){
 process.on('SIGINT', function() {
     // shuttingDown = true;
     database.endConnection(connection)
-        .then(function(properDisconnection){
-            console.log(properDisconnection);
-            var port = listener.address().port;
-            listener.close(function(){
-                console.log("server closed on port " + port);
-                process.exit(0);
-            });
-        })
-        .catch(function(error){
-            console.log(error);
-            process.exit(1);
-        })
+    .then(function(properDisconnection){
+        console.log(properDisconnection);
+        var port = listener.address().port;
+        listener.close(function(){
+            console.log("server closed on port " + port);
+            process.exit(0);
+        });
+    })
+    .catch(function(error){
+        console.log(error);
+        process.exit(1);
+    })
     ;
 });

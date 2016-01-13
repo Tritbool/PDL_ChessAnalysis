@@ -1,13 +1,13 @@
 /* jshint
-    laxcomma:true
-    , laxbreak:true
-    , node:true
-    , loopfunc:true
+laxcomma:true
+, laxbreak:true
+, node:true
+, loopfunc:true
 */
 var promise     = require('es6-promise').Promise
-    , _         = require('lodash')
-    , database  = require('./database')
-    ;
+, _         = require('lodash')
+, database  = require('./database')
+;
 
 var getDataGame = function(idGame, connection){
     return new Promise(function(resolve, reject) {
@@ -47,7 +47,9 @@ var getDataGame = function(idGame, connection){
                 };
             });
             data.game = {
-                event : {
+                id : idGame
+                , result : results.rows[1][0].result
+                , event : {
                     name    : (results.rows[1][0].eventName !== undefined) ? results.rows[1][0].eventName.replace(/\'/g,'\\\'') : ""
                     , city  : (results.rows[1][0].eventCity !== undefined) ? results.rows[1][0].eventCity.replace(/\'/g,'\\\'') : ""
                     , date  : (results.rows[1][0].date !== undefined) ? results.rows[1][0].date.replace(/\'/g,'\\\'') : ""
@@ -92,7 +94,7 @@ var parseLog = function(log){
                     scoreDepths.push(scoreCp);
                 }
                 else{
-                  scoreDepths.push(0);
+                    scoreDepths.push(0);
                 }
             }
             resolve({depths:scoreDepths, bestmove:bestmove});
@@ -124,6 +126,7 @@ var getPartialDataGame = function(idGame, connection){
         .then(function(results){
             var data = {
                 id      : idGame
+                , result : results[1][0].result
                 , event : {
                     name    : results[1][0].eventName.replace(/\'/g,'\\\'')
                     , city  : results[1][0].eventCity.replace(/\'/g,'\\\'')
@@ -155,10 +158,10 @@ var parsePartialLog = function(log){
             var startNodes = last.search("nodes");
             var scoreCp = parseInt(last.slice(startScoreCp + "score cp".length, startNodes));
             if (!isNaN(scoreCp)){
-              resolve(scoreCp);
+                resolve(scoreCp);
             }
             else{
-              reject(0);
+                reject(0);
             }
         }
         else{
@@ -170,19 +173,19 @@ var parsePartialLog = function(log){
 var getAllDataGames = function(connection){
     return new Promise(function(resolve, reject) {
         database.getIdGames(connection)
-            .then(function(res){
-                return _.map(res.rows, function(o){
-                    return getPartialDataGame(o.id, connection);
-                });
-            })
-            .then(function(arrayOfPromises){
-                Promise.all(arrayOfPromises).then(function(arrayOfResults) {
-                    resolve({games : arrayOfResults});
-                });
-            })
-            .catch(function(error){
-                reject(error);
-            })
+        .then(function(res){
+            return _.map(res.rows, function(o){
+                return getPartialDataGame(o.id, connection);
+            });
+        })
+        .then(function(arrayOfPromises){
+            Promise.all(arrayOfPromises).then(function(arrayOfResults) {
+                resolve({games : arrayOfResults});
+            });
+        })
+        .catch(function(error){
+            reject(error);
+        })
         ;
     });
 };
