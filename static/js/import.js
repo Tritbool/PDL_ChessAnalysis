@@ -15,13 +15,13 @@ laxcomma:true
             data = chess.PGN.parse(pgn);
         }
         catch(e){
-            return "";
+            return e;
         }
         return data[0];
     };
     var parsePGN = function(){
         var results = getPGN();
-        if (results !== "" && results.ply.length !== 0){
+        if (results.ply !== undefined && results.ply.length !== 0){
             var data = {
                 moves : []
             };
@@ -52,7 +52,7 @@ laxcomma:true
             return {data:data, ok:true};
         }
         else{
-            return {data:result, ok:false};
+            return {data:results, ok:false};
         }
     };
 
