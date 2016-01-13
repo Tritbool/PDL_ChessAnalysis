@@ -5,7 +5,6 @@ laxcomma:true
 */
 
 var promise = require('es6-promise').Promise
-, Chess = require('chess.js').Chess
 , mysql = require('mysql')
 ;
 
